@@ -1,4 +1,4 @@
-#Graduation Project Repository 
+# Graduation Project Repository 
 
 ---
 
@@ -40,7 +40,7 @@ Project Structure
 
 
 
-##Mobile App 
+## Mobile App 
 * to build the project for mobile app development
 * ```
     $ git clone https://github.com/Fighteros/GradProject.git
@@ -74,7 +74,7 @@ now you can use your favorite IDE and build or run the project using the followi
 ```
 $ python mange.py runserver
 ```
-#Important Git Commands
+# Important Git Commands
 
 this section is supposed to be project **team mates** only
 
