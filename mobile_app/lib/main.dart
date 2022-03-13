@@ -15,7 +15,6 @@ class App extends StatelessWidget {
       home: Home(),
     );
   }
-
 }
 
 class Home extends StatelessWidget {
@@ -23,6 +22,10 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          'xHealth',
+          style: TextStyle(color: Colors.black),
+        ),
         backgroundColor: Colors.white,
         elevation: 5.0,
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -30,15 +33,11 @@ class Home extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Text('xHealth HomeScreen',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22.0
-          ),
+        child: Text(
+          'xHealth HomeScreen',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
         ),
       ),
     );
   }
 }
-
-
