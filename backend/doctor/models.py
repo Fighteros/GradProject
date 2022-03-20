@@ -8,3 +8,6 @@ class Doctor(models.Model):
     first_name = models.CharField(max_length=255, null=False)
     last_name = models.CharField(max_length=255, null=False)
     email = models.CharField(max_length=255, null=False, unique=True)
+
+    def __str__(self):
+        return self.username
