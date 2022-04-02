@@ -29,16 +29,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-<<<<<<< HEAD
   conditional_builder_null_safety: ^0.0.6
   bloc: ^8.0.3
   flutter_bloc: ^8.0.1
   dio: ^4.0.4
   font_awesome_flutter: ^10.1.0
-=======
-  sqflite: ^2.0.2
-
->>>>>>> e496e55df183be9654033112d260505ede72ea63
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
