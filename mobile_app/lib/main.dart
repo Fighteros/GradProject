@@ -16,7 +16,36 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: themes(),
       debugShowCheckedModeBanner: false,
+<<<<<<< HEAD
       home: HomeScreen(),
+=======
+      home: Home(),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'xHealth',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 5.0,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.black,
+        ),
+      ),
+      body: Center(
+        child: Text(
+          'xHealth HomeScreen',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+        ),
+      ),
+>>>>>>> e496e55df183be9654033112d260505ede72ea63
     );
   }
 }

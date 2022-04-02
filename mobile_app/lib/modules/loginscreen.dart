@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_app/modules/doctor_home_screen.dart';
+import 'package:mobile_app/shared/bloc/cubit.dart';
+import 'package:mobile_app/shared/bloc/states.dart';
 import 'package:mobile_app/shared/components/components.dart';
-import 'package:mobile_app/shared/cubit/cubit.dart';
-import 'package:mobile_app/shared/cubit/states.dart';
 import 'package:mobile_app/shared/styles/constant.dart';
 
 class LoginScreen extends StatefulWidget {

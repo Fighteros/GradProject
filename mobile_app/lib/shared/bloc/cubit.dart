@@ -2,7 +2,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_app/models/login_model.dart';
-import 'package:mobile_app/shared/cubit/states.dart';
+import 'package:mobile_app/shared/bloc/states.dart';
 import 'package:mobile_app/shared/network/remote/dio.dart';
 
 class LoginCubit extends Cubit<AppLoginStates> {
