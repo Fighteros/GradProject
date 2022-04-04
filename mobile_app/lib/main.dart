@@ -17,7 +17,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: themes(),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: AddPatientScreen(),
     );
   }
 }

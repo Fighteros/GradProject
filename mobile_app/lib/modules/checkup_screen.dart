@@ -15,6 +15,7 @@ class _CheckUpScreenState extends State<CheckUpScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(270.0),
         child: AppBar(
+          elevation: 0.0,
           flexibleSpace: Center(
             child: Container(
               height: 188,

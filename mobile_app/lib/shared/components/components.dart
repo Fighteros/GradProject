@@ -10,17 +10,19 @@ Widget textFormField({
   IconData? prefix,
   IconData? suffix,
   Function? suffixPressed,
-  required String lable,
+  String? lable,
+  String? hint,
   required TextEditingController controller,
   String? Function(String value)? validate,
   Function? onTap,
   Function? onSubmit,
   double radius = 30.0,
   TextStyle? labelStyle,
-  double? height,
-  double? width,
+  TextStyle? hintStyle,
+  int? maxlines,
 }) =>
     TextFormField(
+      maxLines: maxlines,
       keyboardType: keyboardType,
       onTap: () {
         onTap!();
@@ -31,6 +33,8 @@ Widget textFormField({
       },
       decoration: InputDecoration(
         labelStyle: labelStyle,
+        hintText: hint,
+        hintStyle: hintStyle,
         filled: true,
         fillColor: Colors.white,
         prefixIcon: Icon(prefix),
@@ -50,6 +54,32 @@ Widget textFormField({
         onSubmit!();
       },
     );
+Widget textField({
+  required TextInputType keyboardType,
+  String? hint,
+  String? error,
+  required TextEditingController controller,
+  String? Function(String value)? validate,
+  Function? onTap,
+  Function? onSubmit,
+  double radius = 30.0,
+  TextStyle? hintStyle,
+}) =>
+    TextField(
+      controller: controller,
+      textAlign: TextAlign.center,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(radius),
+        ),
+        errorText: error,
+        hintText: hint,
+        hintStyle: hintStyle,
+      ),
+    );
+
 Widget defulttext({
   required String textName,
   double? size,
