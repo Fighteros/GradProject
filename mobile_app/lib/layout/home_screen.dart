@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/modules/loginscreen.dart';
 import 'package:mobile_app/shared/components/components.dart';
+import 'package:mobile_app/shared/network/local/cache_helper.dart';
 import 'package:mobile_app/shared/styles/constant.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -33,7 +34,10 @@ class HomeScreen extends StatelessWidget {
                   width: 301,
                   radius: 13,
                   onPressed: () {
-                    navigateTo(context, const LoginScreen());
+                    CacheHelper.saveData(key: 'home', value: true)
+                        .then((value) {
+                      if (value) navigatePushAndRemove(context, LoginScreen());
+                    });
                   }),
             ]),
           ),

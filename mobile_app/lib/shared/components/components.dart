@@ -1,32 +1,40 @@
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mobile_app/shared/styles/constant.dart';
+import 'dart:io';
 
-import '../../modules/loginscreen.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobile_app/models/getdoctor_model.dart';
+import 'package:mobile_app/modules/loginscreen.dart';
+import 'package:mobile_app/modules/profile_screen.dart';
+import 'package:mobile_app/shared/bloc/doctor_cubit/cubit.dart';
+import 'package:mobile_app/shared/bloc/login_cubit/cubit.dart';
+import 'package:mobile_app/shared/bloc/profile/cubit.dart';
+import 'package:mobile_app/shared/network/local/cache_helper.dart';
+import 'package:mobile_app/shared/styles/constant.dart';
 
 Widget textFormField({
   required TextInputType keyboardType,
   bool obscureText = false,
-  IconData? prefix,
-  IconData? suffix,
-  Function? suffixPressed,
+  // IconData? prefix,
+  // IconData? suffix,
+  // Function? suffixPressed,
   String? lable,
   String? hint,
   required TextEditingController controller,
   String? Function(String value)? validate,
-  Function? onTap,
-  Function? onSubmit,
+  // Function? onTap,
+  // Function? onSubmit,
   double radius = 30.0,
   TextStyle? labelStyle,
   TextStyle? hintStyle,
   int? maxlines,
 }) =>
     TextFormField(
-      maxLines: maxlines,
       keyboardType: keyboardType,
-      onTap: () {
-        onTap!();
-      },
+      // onTap: () {
+      //   onTap!();
+      // },
       obscureText: obscureText,
       validator: (value) {
         return validate!(value!);
@@ -37,23 +45,24 @@ Widget textFormField({
         hintStyle: hintStyle,
         filled: true,
         fillColor: Colors.white,
-        prefixIcon: Icon(prefix),
-        suffixIcon: IconButton(
-          icon: Icon(suffix),
-          onPressed: () {
-            suffixPressed!();
-          },
-        ),
+        // prefixIcon: Icon(prefix),
+        // suffixIcon: IconButton(
+        //   icon: Icon(suffix),
+        //   onPressed: () {
+        //     suffixPressed!();
+        //   },
+        // ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),
         ),
         labelText: lable,
       ),
       controller: controller,
-      onFieldSubmitted: (value) {
-        onSubmit!();
-      },
+      // onFieldSubmitted: (value) {
+      //   onSubmit!();
+      // },
     );
+
 Widget textField({
   required TextInputType keyboardType,
   String? hint,
@@ -61,6 +70,7 @@ Widget textField({
   required TextEditingController controller,
   String? Function(String value)? validate,
   Function? onTap,
+  bool obscureText = false,
   Function? onSubmit,
   double radius = 30.0,
   TextStyle? hintStyle,
@@ -68,6 +78,8 @@ Widget textField({
     TextField(
       controller: controller,
       textAlign: TextAlign.center,
+      obscureText: obscureText,
+      textCapitalization: TextCapitalization.none,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
@@ -186,6 +198,13 @@ Widget buildPatientItems(String nameOfPatients) => SingleChildScrollView(
         ),
       ),
     );
+void navigatePushAndRemove(context, widget) => Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => widget,
+        ), (route) {
+      return false;
+    });
 
 class CustomAppBar extends ContinuousRectangleBorder {
   @override
@@ -212,7 +231,22 @@ Widget buildPopMenuButton(BuildContext context) {
     ),
     onSelected: (value) {
       if (value == 0) {
-        navigateTo(context, const LoginScreen());
+        CacheHelper.removeData(key: 'userLevelId').then((value) {});
+        CacheHelper.removeData(key: 'id').then((value) {});
+        CacheHelper.removeData(key: 'token').then((value) {
+          if (value) {
+            navigatePushAndRemove(context, const LoginScreen());
+            Fluttertoast.showToast(
+              msg: 'Good By 😥😥😥',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.teal,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+          }
+        });
       }
     },
     itemBuilder: (BuildContext context) => <PopupMenuEntry>[
@@ -236,3 +270,40 @@ Widget buildPopMenuButton(BuildContext context) {
     ],
   );
 }
+
+Widget ProfileIcon(BuildContext context) {
+  var cubit = AppDoctorCubit.get(context);
+  var profFromLogin = AppCubit.get(context);
+  var prof = AppDoctorProfileCubit.get(context);
+  return Padding(
+    padding: EdgeInsets.only(right: 13, top: 7),
+    child: Stack(
+      children: [
+        IconButton(
+          onPressed: () {
+            navigateTo(context, ProfileScreen());
+          },
+          icon: ConditionalBuilder(
+            condition: cubit.getDoctor != null,
+            builder: (context) => CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 50,
+              backgroundImage: image == null
+                  ? NetworkImage('${cubit.getDoctor?.image?.url}')
+                  : NetworkImage('${prof.uploadImages?.image?.url}'),
+            ),
+            fallback: (context) => CircularProgressIndicator(color: pinkColor),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+var token;
+enum ImageSourceType { gallery, camera }
+String? firstnameOfDoctor;
+String? lastnameOfDoctor;
+int? userlevel;
+var id;
+File? image;

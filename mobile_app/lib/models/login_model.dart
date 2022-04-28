@@ -1,45 +1,71 @@
 class LoginModel {
-  late bool status;
-  late String message;
-  late UserData data;
+  String? accessToken;
+  String? tokenType;
+  User? user;
+
+  LoginModel({this.accessToken, this.tokenType, this.user});
 
   LoginModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
-    data = (json['data'] != null ? UserData.fromJson(json['data']) : null)!;
+    accessToken = json['access_token'];
+    tokenType = json['token_type'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 }
 
-class UserData {
-  late int id;
-  late String name;
-  late String email;
-  late String phone;
-  late String image;
-  late String token;
-  late int point;
-  late int credit;
+class User {
+  String? id;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? gender;
+  String? age;
+  String? phoneNumber;
+  String? jobTitle;
+  int? userLevelId;
+  String? createdAt;
+  String? updatedAt;
+  Image? image;
 
-  // UserData(
-  //     {required this.id,
-  //      required this.name,
-  //      required this.email,
-  //      required this.phone,
-  //      required this.image,
-  //      required this.token,
-  //      required this.point,
-  //      required this.credit,
-  //     }
-  //     );
+  User(
+      {this.id,
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.gender,
+      this.age,
+      this.phoneNumber,
+      this.jobTitle,
+      this.userLevelId,
+      this.createdAt,
+      this.updatedAt,
+      this.image});
 
-  UserData.fromJson(Map<String, dynamic> json) {
+  User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
+    firstName = json['first_name'];
+    lastName = json['last_name'];
     email = json['email'];
-    phone = json['phone'];
-    image = json['image'];
-    token = json['token'];
-    credit = json['credit'];
-    point = json['point'];
+    gender = json['gender'];
+    age = json['age'];
+    phoneNumber = json['phone_number'];
+    jobTitle = json['job_title'];
+    userLevelId = json['user_level_id'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    image = json['image'] != null ? new Image.fromJson(json['image']) : null;
+  }
+}
+
+class Image {
+  int? id;
+  String? url;
+  bool? isDeleted;
+
+  Image({this.id, this.url, this.isDeleted});
+
+  Image.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    url = json['url'];
+    isDeleted = json['is_deleted'];
   }
 }
