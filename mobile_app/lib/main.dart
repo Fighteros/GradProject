@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_app/layout/home_screen.dart';
+import 'package:mobile_app/modules/admin_screen.dart';
 import 'package:mobile_app/modules/doctor_home_screen.dart';
 import 'package:mobile_app/modules/loginscreen.dart';
 import 'package:mobile_app/modules/patient_screen.dart';
@@ -22,7 +23,9 @@ void main() async {
   await CacheHelper.init();
   Widget? widget;
 
-  bool homeScreen = CacheHelper.getData(key: 'home');
+  bool? homeScreen;
+
+  homeScreen = CacheHelper.getData(key: 'home');
   token = CacheHelper.getData(key: 'token');
   var userLevelId = CacheHelper.getData(key: 'userLevelId');
   id = CacheHelper.getData(key: 'id');
@@ -32,6 +35,8 @@ void main() async {
       widget = const HomePatientScreen();
     } else if (userLevelId.toString() == '2') {
       widget = const DoctorScreen();
+    } else if (userLevelId.toString() == '1') {
+      widget = const AdminScreen();
     } else {
       widget = const LoginScreen();
     }
@@ -59,10 +64,12 @@ class MyApp extends StatelessWidget {
           create: (context) => AppCubit(),
         ),
         BlocProvider(
-          create: (context) => AppDoctorCubit()..getDoctorData(),
+          create: (context) => AppDoctorCubit()
+            ..getDoctorData()
+            ..getCheckUpForDoctor(),
         ),
         BlocProvider(
-          create: (context) => AppPatientCubit()..getPatientData(),
+          create: (context) => AppPatientCubit(),
         ),
         BlocProvider(
           create: (context) => AppDoctorProfileCubit()..upLoadImageProfile(),

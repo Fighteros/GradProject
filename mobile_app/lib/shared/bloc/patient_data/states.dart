@@ -15,6 +15,25 @@ class AppGetPatientErrorStates extends GetPatientStates {
   AppGetPatientErrorStates(this.error);
 }
 
+class AppGetPatientsLoadingStates extends GetPatientStates {}
+
+class AppGetPatientsSuccessStates extends GetPatientStates {}
+
+class AppGetPatientsErrorStates extends GetPatientStates {
+  final String error;
+
+  AppGetPatientsErrorStates(this.error);
+}
+
+class AppCreateCheckUpLoadingStates extends GetPatientStates {}
+
+class AppCreateCheckUpSuccessStates extends GetPatientStates {}
+
+class AppCreateCheckUpErrorStates extends GetPatientStates {
+  final String error;
+
+  AppCreateCheckUpErrorStates(this.error);
+}
 //__________________________________________________________________________________________________________________
 
 // class AppCreatePatientLoadingStates extends DoctorLoginStates {}

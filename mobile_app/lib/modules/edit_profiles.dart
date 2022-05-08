@@ -48,7 +48,7 @@ class _EditProfileState extends State<EditProfile> {
                       backgroundColor: Colors.white,
                       radius: 80,
                       backgroundImage: image == null
-                          ? NetworkImage('${cubit.getDoctor?.image?.url}')
+                          ? NetworkImage('${getDoctor?.image?.url}')
                           : FileImage(image!) as ImageProvider,
                     ),
                     CircleAvatar(

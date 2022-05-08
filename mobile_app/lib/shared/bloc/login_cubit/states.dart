@@ -21,8 +21,6 @@ class AppLoginErrorStates extends DoctorLoginStates {
 
 
 
-
-
 // ______________________________________get Doctor States ______________________________________________________
 
 // class AppGetDoctorLoadingStates extends DoctorLoginStates {}

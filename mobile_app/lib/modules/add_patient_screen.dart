@@ -8,8 +8,6 @@ import 'package:mobile_app/shared/bloc/create_patient/states.dart';
 import 'package:mobile_app/shared/components/components.dart';
 import 'package:mobile_app/shared/styles/constant.dart';
 
-import '../shared/bloc/login_cubit/cubit.dart';
-
 class AddPatientScreen extends StatefulWidget {
   const AddPatientScreen({Key? key}) : super(key: key);
 
@@ -125,6 +123,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                                 hintStyle: const TextStyle(
                                   fontSize: 13,
                                 ),
+                                onChange: (value) {
+                                  value = null;
+                                },
                                 validate: (value) {
                                   if (value.isEmpty) {
                                     return 'first name must not be empty';
@@ -146,6 +147,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                                 hintStyle: const TextStyle(
                                   fontSize: 13,
                                 ),
+                                onChange: (value) {
+                                  value = null;
+                                },
                                 keyboardType: TextInputType.name,
                                 validate: (value) {
                                   if (value.isEmpty) {
@@ -176,6 +180,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                             return null;
                           }
                         },
+                        onChange: (value) {
+                          value = null;
+                        },
                         controller: emailController,
                         hint: 'email',
                         radius: 20,
@@ -202,6 +209,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           } else {
                             return null;
                           }
+                        },
+                        onChange: (value) {
+                          value = null;
                         },
                         obscureText: true,
                         controller: passwordController,
@@ -230,6 +240,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           } else {
                             return null;
                           }
+                        },
+                        onChange: (value) {
+                          value = null;
                         },
                         controller: phoneController,
                         hint: 'phone',

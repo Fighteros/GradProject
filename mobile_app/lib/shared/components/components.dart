@@ -4,6 +4,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobile_app/models/getcheckup_model.dart';
 import 'package:mobile_app/models/getdoctor_model.dart';
 import 'package:mobile_app/modules/loginscreen.dart';
 import 'package:mobile_app/modules/profile_screen.dart';
@@ -16,15 +17,11 @@ import 'package:mobile_app/shared/styles/constant.dart';
 Widget textFormField({
   required TextInputType keyboardType,
   bool obscureText = false,
-  // IconData? prefix,
-  // IconData? suffix,
-  // Function? suffixPressed,
   String? lable,
   String? hint,
   required TextEditingController controller,
   String? Function(String value)? validate,
-  // Function? onTap,
-  // Function? onSubmit,
+  Function? onChange,
   double radius = 30.0,
   TextStyle? labelStyle,
   TextStyle? hintStyle,
@@ -58,6 +55,9 @@ Widget textFormField({
         labelText: lable,
       ),
       controller: controller,
+      onChanged: (String value) {
+        onChange!(value);
+      },
       // onFieldSubmitted: (value) {
       //   onSubmit!();
       // },
@@ -139,65 +139,6 @@ Widget defultButton({
         ),
       ),
     );
-
-void navigateTo(context, widget) => Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => widget,
-      ),
-    );
-Widget buildPatientItems(String nameOfPatients) => SingleChildScrollView(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadiusDirectional.circular(10),
-        ),
-        child: Row(
-          children: [
-            const Expanded(
-              child: Image(
-                image: AssetImage(
-                  'images/122-work-from-home-2.png',
-                ),
-                height: 100,
-                width: 90,
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: pinkColor,
-                  borderRadius: BorderRadiusDirectional.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    defulttext(
-                      textName: '$nameOfPatients',
-                      size: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    defulttext(
-                      textName: 'age: 22 - male ',
-                      size: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    defulttext(
-                      textName:
-                          'fathi suffers from short sightedness and astihmatism due to hereditary reason',
-                      size: 15,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
 void navigatePushAndRemove(context, widget) => Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -221,6 +162,83 @@ class CustomAppBar extends ContinuousRectangleBorder {
   }
 }
 
+void navigateTo(context, widget) => Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => widget,
+      ),
+    );
+
+Widget buildPatientItems(getCheck) => SingleChildScrollView(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadiusDirectional.circular(10),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Image(
+                image: NetworkImage(
+                  '${GetCheckUpModel.fromJson(getCheck).patient?.image?.url}',
+                ),
+                height: 100,
+                width: 90,
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: pinkColor,
+                  borderRadius: BorderRadiusDirectional.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    defulttext(
+                      textName:
+                          '${GetCheckUpModel.fromJson(getCheck).patient?.firstName} ${GetCheckUpModel.fromJson(getCheck).patient?.lastName}',
+                      size: 21,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    GetCheckUpModel.fromJson(getCheck).patient?.age == ''
+                        ? defulttext(textName: '')
+                        : defulttext(
+                            textName:
+                                'age: ${GetCheckUpModel.fromJson(getCheck).patient?.age}',
+                            size: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    defulttext(
+                      textName:
+                          '${GetCheckUpModel.fromJson(getCheck).description}',
+                      size: 15,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+Widget patientBuilder(getCheck, context) => ConditionalBuilder(
+      condition: getCheck.length > 0,
+      builder: (context) => ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemBuilder: (context, index) => buildPatientItems(getCheck[index]),
+        separatorBuilder: (context, index) => const SizedBox(
+          height: 10,
+        ),
+        itemCount: getCheck.length,
+      ),
+      fallback: (context) => Center(child: CircularProgressIndicator()),
+    );
+
 @override
 Widget buildPopMenuButton(BuildContext context) {
   return PopupMenuButton(
@@ -231,13 +249,17 @@ Widget buildPopMenuButton(BuildContext context) {
     ),
     onSelected: (value) {
       if (value == 0) {
-        CacheHelper.removeData(key: 'userLevelId').then((value) {});
-        CacheHelper.removeData(key: 'id').then((value) {});
+        CacheHelper.removeData(key: 'userLevelId');
+        CacheHelper.removeData(key: 'id').then((value) {
+          id = null;
+        });
         CacheHelper.removeData(key: 'token').then((value) {
           if (value) {
+            token = null;
+            print(token);
             navigatePushAndRemove(context, const LoginScreen());
             Fluttertoast.showToast(
-              msg: 'Good By 😥😥😥',
+              msg: 'Good By',
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 1,
@@ -284,12 +306,12 @@ Widget ProfileIcon(BuildContext context) {
             navigateTo(context, ProfileScreen());
           },
           icon: ConditionalBuilder(
-            condition: cubit.getDoctor != null,
+            condition: getDoctor != null,
             builder: (context) => CircleAvatar(
               backgroundColor: Colors.white,
               radius: 50,
               backgroundImage: image == null
-                  ? NetworkImage('${cubit.getDoctor?.image?.url}')
+                  ? NetworkImage('${getDoctor?.image?.url}')
                   : NetworkImage('${prof.uploadImages?.image?.url}'),
             ),
             fallback: (context) => CircularProgressIndicator(color: pinkColor),
@@ -300,10 +322,87 @@ Widget ProfileIcon(BuildContext context) {
   );
 }
 
+Widget BuildSearchItems(search) => Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image(
+              image: NetworkImage(
+                search['image']['url'],
+              ),
+              height: 55,
+              width: 50,
+            ),
+            const Divider(
+              indent: 15,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                defulttext(
+                  textName: '${search['first_name']} ${search['last_name']}',
+                  size: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                search['phone_number'] == ""
+                    ? defulttext(
+                        textName: '',
+                        size: 15,
+                      )
+                    : defulttext(
+                        textName: 'Phone: ${search['phone_number']}',
+                      ),
+                Row(
+                  children: [
+                    search['age'] == ""
+                        ? defulttext(
+                            textName: '',
+                            size: 15,
+                          )
+                        : defulttext(
+                            textName: 'age: ${search['age']} years',
+                            size: 15,
+                          ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    defulttext(
+                      textName: 'id: ${search['id']}',
+                      size: 15,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+Widget searchBuilder(list, context, {isSearch = false}) => ConditionalBuilder(
+      condition: list.length > 0,
+      builder: (context) => ListView.separated(
+        itemBuilder: (context, index) => BuildSearchItems(list[index]),
+        separatorBuilder: (context, index) => Divider(
+          color: pinkColor,
+        ),
+        itemCount: list.length,
+      ),
+      fallback: (context) => isSearch
+          ? SizedBox()
+          : Center(
+              child: CircularProgressIndicator(
+              color: pinkColor,
+            )),
+    );
+
 var token;
-enum ImageSourceType { gallery, camera }
+GetDoctorModel? getDoctor;
+// List<GetCheckUpModel>? getCheckUp;
 String? firstnameOfDoctor;
 String? lastnameOfDoctor;
 int? userlevel;
-var id;
+String? id;
+
 File? image;

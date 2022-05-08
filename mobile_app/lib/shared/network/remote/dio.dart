@@ -3,7 +3,7 @@ import 'package:mobile_app/shared/bloc/end_points.dart';
 import 'package:mobile_app/shared/components/components.dart';
 
 class DioHelper {
-  static late Dio dio;
+  static Dio? dio;
   static const String accessType = 'Bearer ';
   static init() {
     dio = Dio(
@@ -18,10 +18,10 @@ class DioHelper {
     required String url,
     Map<String, dynamic>? query,
   }) async {
-    dio.options.headers = {
+    dio?.options.headers = {
       "authorization": '$accessType$token',
     };
-    return dio.get(
+    return dio!.get(
       url,
       queryParameters: query,
     );
@@ -32,10 +32,10 @@ class DioHelper {
     Map<String, dynamic>? query,
     required Map<String, dynamic> data,
   }) async {
-    dio.options.headers = {
+    dio?.options.headers = {
       "authorization": "$accessType$token",
     };
-    return dio.post(
+    return dio!.post(
       url,
       queryParameters: query,
       data: data,
@@ -48,12 +48,12 @@ class DioHelper {
     required String url,
     Map<String, dynamic>? query,
   }) async {
-    dio.options.headers = {
+    dio?.options.headers = {
       "authorization": "$accessType$token",
     };
     try {
       FormData formData = FormData.fromMap(body);
-      res = await dio.post(
+      res = await dio?.post(
         url,
         data: formData,
         queryParameters: query,
@@ -66,7 +66,7 @@ class DioHelper {
   }
 
   static Future<Response> uploadImage() async {
-    dio.options.headers = {
+    dio?.options.headers = {
       "authorization": '$accessType$token',
     };
     FormData formData = FormData.fromMap({
@@ -74,7 +74,7 @@ class DioHelper {
         image!.path,
       )
     });
-    return dio.post(
+    return dio!.post(
       UPLOADPROFILE,
       data: formData,
     );

@@ -1,4 +1,4 @@
-class GetPatientModel {
+class SearchModel {
   String? id;
   String? firstName;
   String? lastName;
@@ -10,9 +10,9 @@ class GetPatientModel {
   int? userLevelId;
   String? createdAt;
   String? updatedAt;
-  Images? image;
+  Image? image;
 
-  GetPatientModel(
+  SearchModel(
       {this.id,
       this.firstName,
       this.lastName,
@@ -25,7 +25,8 @@ class GetPatientModel {
       this.createdAt,
       this.updatedAt,
       this.image});
-  GetPatientModel.fromJson(Map<String, dynamic> json) {
+
+  SearchModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     firstName = json['first_name'];
     lastName = json['last_name'];
@@ -37,18 +38,18 @@ class GetPatientModel {
     userLevelId = json['user_level_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    image = json['image'] != null ? new Images.fromJson(json['image']) : null;
+    image = json['image'] != null ? new Image.fromJson(json['image']) : null;
   }
 }
 
-class Images {
+class Image {
   int? id;
   String? url;
   bool? isDeleted;
 
-  Images({this.id, this.url, this.isDeleted});
+  Image({this.id, this.url, this.isDeleted});
 
-  Images.fromJson(Map<String, dynamic> json) {
+  Image.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     url = json['url'];
     isDeleted = json['is_deleted'];

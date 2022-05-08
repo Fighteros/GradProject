@@ -1,12 +1,6 @@
-import 'package:mobile_app/models/login_model.dart';
-
 abstract class GetDoctorProfileStates {}
 
 class AppInitialStates extends GetDoctorProfileStates {}
-
-class AppProfileImageSuccessStates extends GetDoctorProfileStates {}
-
-class AppProfileImageErrorStates extends GetDoctorProfileStates {}
 
 class AppUploadProfileImageLoadingStates extends GetDoctorProfileStates {}
 

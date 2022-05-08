@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: Colors.white,
                       radius: 80,
                       backgroundImage: image == null
-                          ? NetworkImage('${cubit.getDoctor?.image!.url}')
+                          ? NetworkImage('${getDoctor?.image!.url}')
                           : NetworkImage('${profile.uploadImages?.image?.url}'),
                     ),
                   ],
@@ -82,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 5,
                 ),
                 Text(
-                  '${cubit.getDoctor?.firstName} ${cubit.getDoctor?.lastName}',
+                  '${getDoctor?.firstName} ${getDoctor?.lastName}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Egypt'),
+                    Text('Doctor Id : ${getDoctor?.id}'),
                     const SizedBox(
                       width: 20,
                     ),
@@ -102,10 +102,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(
                       width: 20,
                     ),
-                    Text('${cubit.getDoctor?.jobTitle}'),
+                    Text('${getDoctor?.jobTitle}'),
                   ],
                 ),
-                Text('${cubit.getDoctor?.age} Years'),
+                SizedBox(
+                  height: 9,
+                ),
+                Text('${getDoctor?.age} Years'),
               ],
             ),
           ),

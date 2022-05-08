@@ -1,4 +1,23 @@
-class GetPatientModel {
+class GetCheckUpModel {
+  int? id;
+  String? description;
+  String? createdAt;
+  String? updatedAt;
+  Doctor? doctor;
+  Doctor? patient;
+  GetCheckUpModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    description = json['description'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    doctor =
+        json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+    patient =
+        json['patient'] != null ? new Doctor.fromJson(json['patient']) : null;
+  }
+}
+
+class Doctor {
   String? id;
   String? firstName;
   String? lastName;
@@ -12,7 +31,7 @@ class GetPatientModel {
   String? updatedAt;
   Images? image;
 
-  GetPatientModel(
+  Doctor(
       {this.id,
       this.firstName,
       this.lastName,
@@ -25,7 +44,8 @@ class GetPatientModel {
       this.createdAt,
       this.updatedAt,
       this.image});
-  GetPatientModel.fromJson(Map<String, dynamic> json) {
+
+  Doctor.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     firstName = json['first_name'];
     lastName = json['last_name'];
