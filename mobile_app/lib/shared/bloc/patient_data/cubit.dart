@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_app/models/drugs_model.dart';
 import 'package:mobile_app/models/getcheckup_model.dart';
 import 'package:mobile_app/models/getpatient_model.dart';
 import 'package:mobile_app/shared/bloc/end_points.dart';
@@ -21,35 +22,22 @@ class AppPatientCubit extends Cubit<GetPatientStates> {
       url: PATIENTDATA,
     ).then((value) {
       getPatient = GetPatientModel.fromJson(value.data);
-      // if (value.statusCode == 200) {
-      //   print(value.data);
-      // } else {
-      //   print('${value.statusCode} : ${value.data.toString()}');
-      // }
       emit(AppGetPatientSuccessStates());
     }).catchError((error) {
       print(error.toString());
       emit(AppGetPatientErrorStates(error));
     });
   }
-// get list of patients
 
-  List data = [];
+  List<dynamic> getPatientFormData = [];
+
   void getPatients() {
-    List<dynamic> getPatientFormData = [];
     emit(AppGetPatientsLoadingStates());
     DioHelper.getData(
       url: GETPATIENTS,
     ).then((value) {
       getPatientFormData = value.data;
-      for (int i = 0; i < getPatientFormData.length; i++) {
-        data = getPatientFormData[i]['first_name'];
-      }
-      for (int j = 0; j < getPatientFormData.length; j++) {
-        print(data[j]);
-      }
-      // data = getPatientFormData[1]['first_name'];
-      // print(data);
+      print(getPatientFormData);
       emit(AppGetPatientsSuccessStates());
     }).catchError((error) {
       print(error.toString());
@@ -69,20 +57,32 @@ class AppPatientCubit extends Cubit<GetPatientStates> {
       'description': description,
     }).then((value) {
       checkUpModel = GetCheckUpModel.fromJson(value.data);
+      print(checkUpModel);
       emit(AppCreateCheckUpSuccessStates());
     }).catchError((e) {
       print(e.toString());
       emit(AppCreateCheckUpErrorStates(e.toString()));
     });
   }
+
+  CreateCheckUpDrugs? createDrugs;
+  void createCheckUpDrugs({
+    required String quantity,
+    required String timePerDay,
+    required String checkUpId,
+    required String checkUpDrugsId,
+  }) {
+    emit(AppDrugsLoadingStates());
+    DioHelper.postData(url: CREATECheckUpDrugs, data: {
+      'quantity': quantity,
+      'times_per_day': timePerDay,
+      'checkup_id': checkUpId,
+      'drug_id': checkUpDrugsId,
+    }).then((value) {
+      createDrugs = CreateCheckUpDrugs.fromJson(value.data);
+      emit(AppDrugsSuccessStates());
+    }).catchError((e) {
+      emit(AppDrugsErrorStates(e.toString()));
+    });
+  }
 }
-//   void getDrugs({
-//     required String drugsname,
-//   }) {
-//     DioHelper.getData(url: GETDRUGS, query: {
-//       'drug_name': drugsname,
-//     }).then((value){
-//       emit()
-//     });
-//   }
-// }

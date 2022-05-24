@@ -1,11 +1,9 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile_app/models/getdoctor_model.dart';
 import 'package:mobile_app/models/login_model.dart';
 import 'package:mobile_app/shared/bloc/end_points.dart';
 import 'package:mobile_app/shared/bloc/login_cubit/states.dart';
-import 'package:mobile_app/shared/components/components.dart';
 import 'package:mobile_app/shared/network/remote/dio.dart';
 
 class AppCubit extends Cubit<DoctorLoginStates> {

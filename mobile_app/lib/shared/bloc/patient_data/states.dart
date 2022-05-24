@@ -34,29 +34,13 @@ class AppCreateCheckUpErrorStates extends GetPatientStates {
 
   AppCreateCheckUpErrorStates(this.error);
 }
-//__________________________________________________________________________________________________________________
 
-// class AppCreatePatientLoadingStates extends DoctorLoginStates {}
+class AppDrugsLoadingStates extends GetPatientStates {}
 
-// class AppCreatePatientSuccessStates extends DoctorLoginStates {}
+class AppDrugsSuccessStates extends GetPatientStates {}
 
-// class AppCreatePatientErrorStates extends DoctorLoginStates {
-//   final String error;
+class AppDrugsErrorStates extends GetPatientStates {
+  final String error;
 
-//   AppCreatePatientErrorStates(this.error);
-// }
-
-// class AppDrugsLoadingStates extends DoctorLoginStates {}
-
-// class AppDrugsSuccessStates extends DoctorLoginStates {
-//   final LoginModel loginModel;
-//   AppDrugsSuccessStates(
-//     this.loginModel,
-//   );
-// }
-
-// class AppDrugsErrorStates extends DoctorLoginStates {
-//   final String error;
-
-//   AppDrugsErrorStates(this.error);
-// }
+  AppDrugsErrorStates(this.error);
+}

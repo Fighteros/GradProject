@@ -32,5 +32,3 @@ class AppGetDoctorErrorStates extends GetDoctorStates {
 
   AppGetDoctorErrorStates(this.error);
 }
-
-class ChangeDataStates extends GetDoctorStates {}

@@ -18,7 +18,36 @@ class AppSearchCubit extends Cubit<SearchStates> {
       'search': text,
     }).then((value) {
       search = value.data;
-      print(search);
+      emit(AppSearchSuccessStates());
+    }).catchError((error) {
+      print('there are no patients');
+      // print(error.toString());
+      emit(AppSearchErrorStates(error.toString()));
+    });
+  }
+
+  void getDoctorSearch(String text) {
+    emit(AppDoctorSearchLoadingStates());
+    DioHelper.getData(url: GETDoctor, query: {
+      'search': text,
+    }).then((value) {
+      search = value.data;
+      emit(AppDoctorSearchSuccessStates());
+    }).catchError((error) {
+      print('there are no patients');
+      // print(error.toString());
+      emit(AppDoctorSearchErrorStates(error.toString()));
+    });
+  }
+
+  List<dynamic> patientSearch = [];
+
+  void getPatientSearch(String text) {
+    emit(AppSearchLoadingStates());
+    DioHelper.getData(url: GETCHECKUP, query: {
+      'search': text,
+    }).then((value) {
+      search = value.data;
       emit(AppSearchSuccessStates());
     }).catchError((error) {
       print('there are no patients');

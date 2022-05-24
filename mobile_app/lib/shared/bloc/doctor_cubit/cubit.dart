@@ -14,10 +14,11 @@ class AppDoctorCubit extends Cubit<GetDoctorStates> {
   // GetDoctorModel? uploadImages;
 
 // ______________________________________get Doctor Cubit ______________________________________________________
-  void getDoctorData() {
+  void getDoctorData(String? id) {
+    print("DOCTORDATA: ${DOCTORDATA + id!}");
     emit(AppGetDoctorLoadingStates());
     DioHelper.getData(
-      url: DOCTORDATA,
+      url: DOCTORDATA + id,
     ).then((value) {
       getDoctor = GetDoctorModel.fromJson(value.data);
       emit(AppGetDoctorSuccessStates(getDoctor!));
@@ -34,7 +35,7 @@ class AppDoctorCubit extends Cubit<GetDoctorStates> {
       url: GETCHECKUP,
     ).then((value) {
       getCheckUp = value.data;
-      print(getCheckUp);
+      // print(getCheckUp);
       emit(AppGetCheckUpForDoctorSuccessStates());
     }).catchError((e) {
       print(e.toString());
@@ -42,19 +43,19 @@ class AppDoctorCubit extends Cubit<GetDoctorStates> {
     });
   }
 
-  String? nameOfDoctor = '';
-  String? urlImage = '';
-  int? checkUpLength = 0;
-  void ChangeData({
-    String? nameDoctor,
-    String? url,
-    int? numOfChecks,
-  }) {
-    nameOfDoctor = nameOfDoctor;
-    urlImage = url;
-    checkUpLength = numOfChecks;
-    emit(ChangeDataStates());
-  }
+  // String? nameOfDoctor = '';
+  // String? urlImage = '';
+  // int? checkUpLength = 0;
+  // void ChangeData({
+  //   String? nameDoctor,
+  //   String? url,
+  //   int? numOfChecks,
+  // }) {
+  //   nameOfDoctor = nameOfDoctor;
+  //   urlImage = url;
+  //   checkUpLength = numOfChecks;
+  //   emit(ChangeDataStates());
+  // }
 }
 //   void getDrugs({
 //     required String drugsname,

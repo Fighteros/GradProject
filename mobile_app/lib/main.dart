@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_app/layout/home_screen.dart';
-import 'package:mobile_app/modules/admin_screen.dart';
+import 'package:mobile_app/modules/admin/admin_screen.dart';
 import 'package:mobile_app/modules/doctor_home_screen.dart';
 import 'package:mobile_app/modules/loginscreen.dart';
 import 'package:mobile_app/modules/patient_screen.dart';
+import 'package:mobile_app/shared/bloc/admin_cubit/cubit.dart';
 import 'package:mobile_app/shared/bloc/bloc_observer.dart';
 import 'package:mobile_app/shared/bloc/create_patient/cubit.dart';
 import 'package:mobile_app/shared/bloc/doctor_cubit/cubit.dart';
@@ -28,8 +29,7 @@ void main() async {
   homeScreen = CacheHelper.getData(key: 'home');
   token = CacheHelper.getData(key: 'token');
   var userLevelId = CacheHelper.getData(key: 'userLevelId');
-  id = CacheHelper.getData(key: 'id');
-
+  idStart = CacheHelper.getData(key: 'id');
   if (homeScreen != null) {
     if (userLevelId.toString() == '3') {
       widget = const HomePatientScreen();
@@ -43,7 +43,6 @@ void main() async {
   } else {
     widget = const HomeScreen();
   }
-
   Bloc.observer = MyBlocObserver();
 
   runApp(MyApp(
@@ -65,17 +64,20 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => AppDoctorCubit()
-            ..getDoctorData()
+            ..getDoctorData(idStart)
             ..getCheckUpForDoctor(),
         ),
         BlocProvider(
-          create: (context) => AppPatientCubit(),
+          create: (context) => AppPatientCubit()..getPatients(),
         ),
         BlocProvider(
           create: (context) => AppDoctorProfileCubit()..upLoadImageProfile(),
         ),
         BlocProvider(
           create: (context) => AppAddPatientCubit(),
+        ),
+        BlocProvider(
+          create: (context) => AppAdminCubit(),
         ),
       ],
       child: BlocConsumer<AppCubit, DoctorLoginStates>(

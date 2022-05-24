@@ -6,8 +6,14 @@ import 'package:mobile_app/shared/bloc/search_cubit/states.dart';
 import 'package:mobile_app/shared/components/components.dart';
 import 'package:mobile_app/shared/styles/constant.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     var searchController = TextEditingController();
@@ -19,7 +25,7 @@ class SearchScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is AppSearchErrorStates) {
             Fluttertoast.showToast(
-              msg: "There are no patients",
+              msg: "There are no in Search",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.SNACKBAR,
               timeInSecForIosWeb: 1,
@@ -31,6 +37,7 @@ class SearchScreen extends StatelessWidget {
         },
         builder: (context, state) {
           var list = AppSearchCubit.get(context).search;
+          // var listOfPatient = AppSearchCubit.get(context).patientSearch;
           var cubit = AppSearchCubit.get(context);
           return Scaffold(
             appBar: AppBar(
@@ -50,12 +57,13 @@ class SearchScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       textFormField(
-                          keyboardType: TextInputType.name,
+                          keyboardType: TextInputType.text,
                           radius: 40,
                           controller: searchController,
-                          onChange: (String text) {
+                          onChange: (text) {
                             textController = text;
                             cubit.getSearch(text);
+                            // cubit.getPatientSearch(text);
                           },
                           hint: 'Search',
                           validate: (value) {

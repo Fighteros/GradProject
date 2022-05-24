@@ -14,6 +14,8 @@ class DioHelper {
     );
   }
 
+  static var res;
+
   static Future<Response> getData({
     required String url,
     Map<String, dynamic>? query,
@@ -42,7 +44,36 @@ class DioHelper {
     );
   }
 
-  static var res;
+  static Future<Response> deleteData({
+    required String url,
+    Map<String, dynamic>? query,
+    Map<String, dynamic>? data,
+  }) async {
+    dio?.options.headers = {
+      "authorization": "$accessType$token",
+    };
+    return dio!.delete(
+      url,
+      queryParameters: query,
+      data: data,
+    );
+  }
+
+  static Future<Response> putData({
+    required String url,
+    Map<String, dynamic>? query,
+    Map<String, dynamic>? data,
+  }) async {
+    dio?.options.headers = {
+      "authorization": "$accessType$token",
+    };
+    return await dio!.put(
+      url,
+      queryParameters: query,
+      data: data,
+    );
+  }
+
   static Future<Response> postbody({
     required Map<String, dynamic> body,
     required String url,
@@ -60,7 +91,7 @@ class DioHelper {
       );
       return res?.data;
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
     return res;
   }

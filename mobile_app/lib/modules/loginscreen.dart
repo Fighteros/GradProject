@@ -2,7 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mobile_app/modules/admin_screen.dart';
+import 'package:mobile_app/modules/admin/admin_screen.dart';
 import 'package:mobile_app/modules/doctor_home_screen.dart';
 import 'package:mobile_app/modules/patient_screen.dart';
 import 'package:mobile_app/shared/bloc/login_cubit/cubit.dart';
@@ -27,53 +27,51 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocConsumer<AppCubit, DoctorLoginStates>(
       listener: (context, state) {
         AppCubit cubit = AppCubit.get(context);
-        if (state is! AppLoginLoadingStates) {
-          userlevel = cubit.login?.user!.userLevelId!.toInt();
-          id = cubit.login?.user?.id;
-          token = cubit.login?.accessToken;
-          print(userlevel);
-          print("token in login Screen" + token);
-          // print(state.loginModel.user?.email);
-          print(cubit.login?.user?.email);
-          print(id);
-          CacheHelper.saveData(key: 'id', value: cubit.login?.user?.id);
-          CacheHelper.saveData(
-                  key: 'userLevelId', value: cubit.login?.user?.userLevelId)
-              .then((value) {
-            if (userlevel == 3 && token != null) {
-              navigatePushAndRemove(context, HomePatientScreen());
-            } else if (userlevel == 2 && token != null) {
-              navigatePushAndRemove(context, DoctorScreen());
-            } else if (userlevel == 1 && token != null) {
-              navigatePushAndRemove(context, AdminScreen());
-            } else {
-              navigatePushAndRemove(context, LoginScreen());
-            }
-            // switch (userlevel) {
-            //   case 3:
-            //     navigatePushAndRemove(context, HomePatientScreen());
-            //     break;
-            //   case 2:
-            //     navigatePushAndRemove(context, DoctorScreen());
-            //     break;
-            //   case 1:
-            //     navigatePushAndRemove(context, AdminScreen());
-            //     break;
-            // }
-          });
+        if (state is AppLoginSuccessStates) {
+          if (state.loginModel != null) {
+            userlevel = cubit.login?.user!.userLevelId!.toInt();
+            idStart = cubit.login?.user?.id;
+            print(userlevel);
+            print(cubit.login?.user?.email);
+            print(idStart);
+            CacheHelper.saveData(key: 'id', value: cubit.login?.user?.id);
+            CacheHelper.saveData(
+                    key: 'userLevelId', value: cubit.login?.user?.userLevelId)
+                .then((value) {
+              if (value && userlevel == 3) {
+                navigatePushAndRemove(context, HomePatientScreen());
+              } else if (userlevel == 2) {
+                navigatePushAndRemove(context, DoctorScreen());
+              } else if (userlevel == 1) {
+                navigatePushAndRemove(context, AdminScreen());
+              } else {
+                navigatePushAndRemove(context, LoginScreen());
+              }
+              // if (userlevel == 3) {
 
-          CacheHelper.saveData(key: 'token', value: cubit.login?.accessToken)
-              .then((value) {
-            Fluttertoast.showToast(
-              msg: "You are welcome",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0,
-            );
-          });
+              // } else if (userlevel == 2) {
+              //   navigatePushAndRemove(context, DoctorScreen());
+              // } else if (userlevel == 1) {
+              //   navigatePushAndRemove(context, AdminScreen());
+              // } else {
+              //   navigatePushAndRemove(context, LoginScreen());
+              // }
+            });
+
+            CacheHelper.saveData(key: 'token', value: cubit.login?.accessToken)
+                .then((value) {
+              token = cubit.login?.accessToken;
+              Fluttertoast.showToast(
+                msg: "You are welcome",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
+            });
+          }
         } else if (state is AppLoginErrorStates) {
           Fluttertoast.showToast(
             msg: "Email or password are not validate",
@@ -88,9 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       builder: (context, state) {
         AppCubit cubit = AppCubit.get(context);
-
-        print(token);
-        print(id);
         return Scaffold(
           appBar: AppBar(),
           body: Padding(

@@ -13,3 +13,13 @@ class AppSearchErrorStates extends SearchStates {
 
   AppSearchErrorStates(this.error);
 }
+
+class AppDoctorSearchLoadingStates extends SearchStates {}
+
+class AppDoctorSearchSuccessStates extends SearchStates {}
+
+class AppDoctorSearchErrorStates extends SearchStates {
+  final String error;
+
+  AppDoctorSearchErrorStates(this.error);
+}

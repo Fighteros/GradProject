@@ -1,11 +1,24 @@
 // ignore: constant_identifier_names
-import 'package:mobile_app/shared/components/components.dart';
 
 const LOGIN = '/auth/login/';
-String DOCTORDATA = '/doctors/$id';
-String PATIENTDATA = '/patients/$id';
+const DOCTORDATA = '/doctors/';
+const PATIENTDATA = '/patients/';
 const AddPATIENTS = '/patients/';
 const GETCHECKUP = '/checkups/doctor';
 const GETPATIENTS = '/patients/';
 const UPLOADPROFILE = '/profile/upload/';
 const CREATECHEACKUP = '/checkups/';
+const CREATEAdmin = '/admins/';
+const DETETEAdmin = '/admins/';
+const GETAdmin = '/admins/';
+const UPDATEAdmin = '/admins/';
+const CREATEDoctor = '/doctors/';
+const DETETEDoctor = '/doctors/';
+const GETDoctor = '/doctors/';
+const UPDATEDoctor = '/doctors/';
+const CREATEPatient = '/patients/';
+const DETETEPatient = '/patients/';
+const GETPatient = '/patients/';
+const UPDATEPatient = '/patients/';
+const CREATECheckUpDrugs = '/checkups/drugs/';
+const CREATEDrugs = '/drugs/';

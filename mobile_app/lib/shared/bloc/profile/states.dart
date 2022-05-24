@@ -7,6 +7,16 @@ class AppUploadProfileImageLoadingStates extends GetDoctorProfileStates {}
 class AppUploadProfileImageSuccessStates extends GetDoctorProfileStates {}
 
 class AppUploadProfileImageErrorStates extends GetDoctorProfileStates {}
+
+class AppUpdatDoctorLoadingStates extends GetDoctorProfileStates {}
+
+class AppUpdatDoctorSuccessStates extends GetDoctorProfileStates {}
+
+class AppUpdatDoctorErrorStates extends GetDoctorProfileStates {
+  final String error;
+
+  AppUpdatDoctorErrorStates(this.error);
+}
 // // ______________________________________get patient States ______________________________________________________
 // class AppGetPatientLoadingStates extends DoctorLoginStates {}
 

@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobile_app/models/getcheckup_model.dart';
 import 'package:mobile_app/models/getdoctor_model.dart';
+import 'package:mobile_app/models/getpatient_model.dart';
 import 'package:mobile_app/modules/loginscreen.dart';
 import 'package:mobile_app/modules/profile_screen.dart';
 import 'package:mobile_app/shared/bloc/doctor_cubit/cubit.dart';
@@ -26,8 +27,10 @@ Widget textFormField({
   TextStyle? labelStyle,
   TextStyle? hintStyle,
   int? maxlines,
+  bool? enabled = true,
 }) =>
     TextFormField(
+      enabled: enabled,
       keyboardType: keyboardType,
       // onTap: () {
       //   onTap!();
@@ -97,9 +100,13 @@ Widget defulttext({
   double? size,
   FontWeight? fontWeight,
   Color? color,
+  int? maxline,
+  TextOverflow? textOverflow,
 }) =>
     Text(
       textName,
+      maxLines: maxline,
+      overflow: textOverflow,
       style: TextStyle(
         fontSize: size,
         fontWeight: fontWeight,
@@ -116,7 +123,7 @@ Widget defultButton({
   FontWeight fontWeight = FontWeight.normal,
   Color changeColorOfText = Colors.white,
   required String changeText,
-  required Function onPressed,
+  Function? onPressed,
 }) =>
     Container(
       width: width,
@@ -127,7 +134,7 @@ Widget defultButton({
         ),
         color: changeColor,
         onPressed: () {
-          onPressed();
+          onPressed!();
         },
         child: Text(
           changeText,
@@ -183,13 +190,11 @@ Widget buildPatientItems(getCheck) => SingleChildScrollView(
                   '${GetCheckUpModel.fromJson(getCheck).patient?.image?.url}',
                 ),
                 height: 100,
-                width: 90,
               ),
             ),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: pinkColor,
                   borderRadius: BorderRadiusDirectional.circular(10),
                 ),
                 child: Column(
@@ -200,11 +205,11 @@ Widget buildPatientItems(getCheck) => SingleChildScrollView(
                       size: 21,
                       fontWeight: FontWeight.bold,
                     ),
-                    GetCheckUpModel.fromJson(getCheck).patient?.age == ''
+                    GetCheckUpModel.fromJson(getCheck).patient?.id == ''
                         ? defulttext(textName: '')
                         : defulttext(
                             textName:
-                                'age: ${GetCheckUpModel.fromJson(getCheck).patient?.age}',
+                                'Id: ${GetCheckUpModel.fromJson(getCheck).patient?.id}',
                             size: 15,
                             fontWeight: FontWeight.bold,
                           ),
@@ -213,9 +218,10 @@ Widget buildPatientItems(getCheck) => SingleChildScrollView(
                     ),
                     defulttext(
                       textName:
-                          '${GetCheckUpModel.fromJson(getCheck).description}',
-                      size: 15,
+                          'Description:\n${GetCheckUpModel.fromJson(getCheck).description}',
+                      size: 17,
                       fontWeight: FontWeight.normal,
+                      color: Colors.blue[600],
                     ),
                   ],
                 ),
@@ -249,14 +255,20 @@ Widget buildPopMenuButton(BuildContext context) {
     ),
     onSelected: (value) {
       if (value == 0) {
-        CacheHelper.removeData(key: 'userLevelId');
+        getDoctor = null;
+        userlevel = 0;
+        idStart = null;
+        token = null;
+        CacheHelper.removeData(key: 'idCheckUps');
+        CacheHelper.removeData(key: 'userLevelId').then((value) {
+          // userlevel == 0;
+        });
         CacheHelper.removeData(key: 'id').then((value) {
-          id = null;
+          // idStart = null;
         });
         CacheHelper.removeData(key: 'token').then((value) {
           if (value) {
-            token = null;
-            print(token);
+            // token = null;
             navigatePushAndRemove(context, const LoginScreen());
             Fluttertoast.showToast(
               msg: 'Good By',
@@ -322,63 +334,68 @@ Widget ProfileIcon(BuildContext context) {
   );
 }
 
-Widget BuildSearchItems(search) => Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image(
-              image: NetworkImage(
-                search['image']['url'],
+Widget BuildSearchItems(patientSearch) => Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image(
+                image: NetworkImage(patientSearch['image']['url']),
+                height: 55,
+                width: 50,
               ),
-              height: 55,
-              width: 50,
-            ),
-            const Divider(
-              indent: 15,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                defulttext(
-                  textName: '${search['first_name']} ${search['last_name']}',
-                  size: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-                search['phone_number'] == ""
-                    ? defulttext(
-                        textName: '',
-                        size: 15,
-                      )
-                    : defulttext(
-                        textName: 'Phone: ${search['phone_number']}',
+              const Divider(
+                indent: 15,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  defulttext(
+                    textName:
+                        '${patientSearch['first_name']} ${patientSearch['last_name']}',
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  patientSearch['phone_number'] == ""
+                      ? defulttext(
+                          textName: '',
+                          size: 15,
+                        )
+                      : defulttext(
+                          textName: 'Phone: ${patientSearch['phone_number']}',
+                        ),
+                  Row(
+                    children: [
+                      patientSearch['age'] == ""
+                          ? defulttext(
+                              textName: '',
+                              size: 15,
+                            )
+                          : defulttext(
+                              textName: 'age: ${patientSearch['age']} years',
+                              size: 15,
+                            ),
+                      const SizedBox(
+                        width: 15,
                       ),
-                Row(
-                  children: [
-                    search['age'] == ""
-                        ? defulttext(
-                            textName: '',
-                            size: 15,
-                          )
-                        : defulttext(
-                            textName: 'age: ${search['age']} years',
-                            size: 15,
-                          ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    defulttext(
-                      textName: 'id: ${search['id']}',
-                      size: 15,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+                      defulttext(
+                        textName: 'id: ${patientSearch['id']}',
+                        size: 15,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
 Widget searchBuilder(list, context, {isSearch = false}) => ConditionalBuilder(
       condition: list.length > 0,
@@ -397,12 +414,11 @@ Widget searchBuilder(list, context, {isSearch = false}) => ConditionalBuilder(
             )),
     );
 
-var token;
+String? token;
 GetDoctorModel? getDoctor;
 // List<GetCheckUpModel>? getCheckUp;
 String? firstnameOfDoctor;
 String? lastnameOfDoctor;
 int? userlevel;
-String? id;
-
+String? idStart;
 File? image;

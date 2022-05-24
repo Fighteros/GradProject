@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobile_app/modules/add_patient_screen.dart';
-import 'package:mobile_app/modules/checkup_screen.dart';
+import 'package:mobile_app/modules/create_checkups.dart';
 import 'package:mobile_app/modules/profile_screen.dart';
 import 'package:mobile_app/modules/search_screen.dart';
 import 'package:mobile_app/shared/bloc/doctor_cubit/cubit.dart';
 import 'package:mobile_app/shared/bloc/doctor_cubit/states.dart';
 import 'package:mobile_app/shared/bloc/profile/cubit.dart';
 import 'package:mobile_app/shared/components/components.dart';
+import 'package:mobile_app/shared/network/local/cache_helper.dart';
 
 class DoctorScreen extends StatefulWidget {
   const DoctorScreen({Key? key}) : super(key: key);
@@ -28,18 +29,20 @@ class _DoctorScreenState extends State<DoctorScreen> {
   void initState() {
     super.initState();
     var docCubit = AppDoctorCubit.get(context);
-    if (getDoctor != null) {
-      docCubit.getDoctorData();
+    var checks = AppDoctorCubit.get(context);
+    checks.getCheckUpForDoctor();
+    if (getDoctor == null) {
+      print("getData ID " + CacheHelper.getData(key: "id").toString());
+      idStart = CacheHelper.getData(key: "id");
+      print("getDoctor id: ${idStart}");
+      docCubit.getDoctorData(idStart);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppDoctorCubit, GetDoctorStates>(
-      listener: (context, state) {
-        var doc = AppDoctorCubit.get(context);
-        var checks = AppDoctorCubit.get(context).getCheckUp;
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         var checks = AppDoctorCubit.get(context).getCheckUp;
         var doc = AppDoctorCubit.get(context);
@@ -240,6 +243,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   const SizedBox(
                     height: 10,
                   ),
+                  // checks != null
+                  // ? defulttext(
+                  //     textName: '0 checkups',
+                  //     size: 18,
+                  //     color: Colors.grey[500],
+                  //     fontWeight: FontWeight.normal,
+                  //   )
                   defulttext(
                     textName: '${checks.length} checkups',
                     size: 18,
@@ -249,6 +259,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   const SizedBox(
                     height: 20,
                   ),
+                  // checks != null ? SizedBox() :
                   patientBuilder(checks, context),
                 ],
               ),
