@@ -35,36 +35,10 @@ class AppDoctorCubit extends Cubit<GetDoctorStates> {
       url: GETCHECKUP,
     ).then((value) {
       getCheckUp = value.data;
-      // print(getCheckUp);
       emit(AppGetCheckUpForDoctorSuccessStates());
     }).catchError((e) {
       print(e.toString());
       emit(AppGetCheckUpForDoctorErrorStates(e.toString()));
     });
   }
-
-  // String? nameOfDoctor = '';
-  // String? urlImage = '';
-  // int? checkUpLength = 0;
-  // void ChangeData({
-  //   String? nameDoctor,
-  //   String? url,
-  //   int? numOfChecks,
-  // }) {
-  //   nameOfDoctor = nameOfDoctor;
-  //   urlImage = url;
-  //   checkUpLength = numOfChecks;
-  //   emit(ChangeDataStates());
-  // }
 }
-//   void getDrugs({
-//     required String drugsname,
-//   }) {
-//     DioHelper.getData(url: GETDRUGS, query: {
-//       'drug_name': drugsname,
-//     }).then((value){
-//       emit()
-//     });
-//   }
-// }
-

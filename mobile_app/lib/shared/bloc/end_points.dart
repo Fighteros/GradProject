@@ -22,3 +22,5 @@ const GETPatient = '/patients/';
 const UPDATEPatient = '/patients/';
 const CREATECheckUpDrugs = '/checkups/drugs/';
 const CREATEDrugs = '/drugs/';
+const CREATEAnalysis = '/rays/';
+const UPLOADAnalysis = '/rays/upload';

@@ -124,7 +124,13 @@ class _CreateState extends State<UpdatePatient> {
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.white,
                         ),
-                        child: DropdownButton(
+                        child: DropdownButtonFormField(
+                          validator: (value) {
+                            if (value == null) {
+                              return 'field must not be empty';
+                            }
+                            return null;
+                          },
                           autofocus: false,
                           hint: const Text(' Select Patient'),
                           items: data.map((item) {
@@ -145,7 +151,6 @@ class _CreateState extends State<UpdatePatient> {
                             });
                           },
                           value: upDateValue,
-                          underline: Container(),
                         ),
                       ),
                       const SizedBox(
@@ -160,7 +165,7 @@ class _CreateState extends State<UpdatePatient> {
                               radius: 13,
                               height: 40,
                               width: 130,
-                              changeText: 'Send',
+                              changeText: 'Get Info',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
                                 if (formKey.currentState!.validate()) {
@@ -419,20 +424,18 @@ class _CreateState extends State<UpdatePatient> {
                               changeText: 'UpDate',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
-                                print(idController.text);
-                                print(fstNameController.text);
-                                print(lastNameController.text);
-                                print(phoneController.text);
-                                cubit.upDatePatient(
-                                  upDateID: upDateValue.toString(),
-                                  firstName: fstNameController.text,
-                                  lastName: lastNameController.text,
-                                  gender: genderController.text,
-                                  age: ageController.text,
-                                  phone: phoneController.text,
-                                  email: emailController.text,
-                                  jobtitle: jobController.text,
-                                );
+                                if (formKey.currentState!.validate()) {
+                                  cubit.upDatePatient(
+                                    upDateID: upDateValue.toString(),
+                                    firstName: fstNameController.text,
+                                    lastName: lastNameController.text,
+                                    gender: genderController.text,
+                                    age: ageController.text,
+                                    phone: phoneController.text,
+                                    email: emailController.text,
+                                    jobtitle: jobController.text,
+                                  );
+                                }
                               }),
                           fallback: (context) => Center(
                               child:

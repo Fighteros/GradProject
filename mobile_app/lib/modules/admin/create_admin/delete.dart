@@ -108,7 +108,14 @@ class _DeleteAdminState extends State<DeleteAdmin> {
                             borderRadius: BorderRadius.circular(15),
                             color: Colors.white,
                           ),
-                          child: DropdownButton(
+                          child: DropdownButtonFormField(
+                            validator: (value) {
+                              if (value != null &&
+                                  adminValue.toString() == '1') {
+                                return 'This admin Can\'t Deleted it';
+                              }
+                              return null;
+                            },
                             hint: const Text(' Select Admin'),
                             items: data.map((item) {
                               return DropdownMenuItem(
@@ -129,8 +136,8 @@ class _DeleteAdminState extends State<DeleteAdmin> {
                                 adminValue = newVal as String;
                               });
                             },
+                            isDense: true,
                             value: adminValue,
-                            underline: Container(),
                           ),
                         ),
                       ),

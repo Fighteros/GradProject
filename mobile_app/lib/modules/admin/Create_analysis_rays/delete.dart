@@ -10,20 +10,20 @@ import 'package:mobile_app/shared/components/components.dart';
 import 'package:mobile_app/shared/styles/constant.dart';
 import 'package:http/http.dart' as http;
 
-class DeleteDoctor extends StatefulWidget {
-  const DeleteDoctor({Key? key}) : super(key: key);
+class DeleteAnalysis extends StatefulWidget {
+  const DeleteAnalysis({Key? key}) : super(key: key);
 
   @override
-  State<DeleteDoctor> createState() => _DeleteAdminState();
+  State<DeleteAnalysis> createState() => _DeleteAdminState();
 }
 
-class _DeleteAdminState extends State<DeleteDoctor> {
+class _DeleteAdminState extends State<DeleteAnalysis> {
   var formKey = GlobalKey<FormState>();
   List data = [];
-  String? doctorValue;
+  String? analysisValue;
   Future<String> getData() async {
     var res = await http.get(
-        Uri.parse('https://grad-project-fy-1.herokuapp.com/api/v1/doctors/'),
+        Uri.parse('https://grad-project-fy-1.herokuapp.com/api/v1/rays/'),
         headers: {
           "authorization": 'Bearer $token',
         });
@@ -44,9 +44,9 @@ class _DeleteAdminState extends State<DeleteDoctor> {
   Widget build(BuildContext context) {
     return BlocConsumer<AppAdminCubit, CreateAdminStates>(
       listener: (context, state) {
-        if (state is AppDeleteDoctorSuccessStates) {
+        if (state is AppDeleteAnalysisSuccessStates) {
           Fluttertoast.showToast(
-            msg: "Email is Delete",
+            msg: "Analysis is Delete",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -54,9 +54,9 @@ class _DeleteAdminState extends State<DeleteDoctor> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-        } else if (state is AppDeleteDoctorErrorStates) {
+        } else if (state is AppDeleteAnalysisErrorStates) {
           Fluttertoast.showToast(
-            msg: "there's no Doctor With this id",
+            msg: "ERROR",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -91,7 +91,7 @@ class _DeleteAdminState extends State<DeleteDoctor> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       defulttext(
-                        textName: 'Delete Doctor',
+                        textName: 'Delete Analysis',
                         fontWeight: FontWeight.bold,
                         size: 22,
                       ),
@@ -110,34 +110,31 @@ class _DeleteAdminState extends State<DeleteDoctor> {
                             }
                             return null;
                           },
-                          hint: const Text(' Select Doctor'),
+                          hint: const Text(' Select Analysis'),
                           items: data.map((item) {
                             return DropdownMenuItem(
                               child: Text(
                                 ' ' +
-                                    item['first_name'] +
+                                    item['name'] +
                                     ' ' +
-                                    item['last_name'] +
-                                    '  ' +
                                     'Id: ' +
-                                    item['id'],
+                                    item['id'].toString(),
                               ),
                               value: item['id'].toString(),
                             );
                           }).toList(),
                           onChanged: (newVal) {
                             setState(() {
-                              doctorValue = newVal as String;
+                              analysisValue = newVal as String;
                             });
                           },
-                          value: doctorValue,
-                          isDense: true,
+                          value: analysisValue,
                         ),
                       ),
                       const SizedBox(height: 20),
                       Center(
                         child: ConditionalBuilder(
-                          condition: state is! AppDeleteDoctorLoadingStates,
+                          condition: state is! AppDeleteAnalysisLoadingStates,
                           builder: (context) => defultButton(
                               changeColor: btnsColor,
                               fontWeight: FontWeight.bold,
@@ -148,8 +145,8 @@ class _DeleteAdminState extends State<DeleteDoctor> {
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
                                 if (formKey.currentState!.validate()) {
-                                  cubit.deleteDoctor(
-                                    deleteID: doctorValue.toString(),
+                                  cubit.deleteAnalysis(
+                                    deleteID: analysisValue.toString(),
                                   );
                                 }
                               }),

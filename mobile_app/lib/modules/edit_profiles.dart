@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_app/shared/bloc/doctor_cubit/cubit.dart';
-import 'package:mobile_app/shared/bloc/doctor_cubit/states.dart';
 import 'package:mobile_app/shared/bloc/profile/cubit.dart';
 import 'package:mobile_app/shared/bloc/profile/states.dart';
 import 'package:mobile_app/shared/components/components.dart';
@@ -30,6 +29,7 @@ class _EditProfileState extends State<EditProfile> {
   var ageController = TextEditingController();
   var genderController = TextEditingController();
   var jobController = TextEditingController();
+  var scaffoldkey = GlobalKey<ScaffoldState>();
 
   void initState() {
     super.initState();
@@ -74,6 +74,7 @@ class _EditProfileState extends State<EditProfile> {
         jobController.text = "${getDoctor?.jobTitle}";
         var profile = AppDoctorProfileCubit.get(context);
         return Scaffold(
+          key: scaffoldkey,
           appBar: AppBar(
             backgroundColor: scaffoldColor,
             elevation: 0,
@@ -97,12 +98,15 @@ class _EditProfileState extends State<EditProfile> {
                         Stack(
                           alignment: AlignmentDirectional.bottomStart,
                           children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 80,
-                              backgroundImage: image == null
-                                  ? NetworkImage('${getDoctor?.image?.url}')
-                                  : FileImage(image!) as ImageProvider,
+                            GestureDetector(
+                              onTap: () => chooseImage(),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 80,
+                                backgroundImage: image == null
+                                    ? NetworkImage('${getDoctor?.image?.url}')
+                                    : FileImage(image!) as ImageProvider,
+                              ),
                             ),
                             CircleAvatar(
                               backgroundColor: scaffoldColor,
@@ -110,7 +114,7 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                             IconButton(
                               onPressed: () {
-                                imageFromGallery();
+                                chooseImage();
                               },
                               icon: const Icon(
                                 Icons.camera_alt,
@@ -139,11 +143,13 @@ class _EditProfileState extends State<EditProfile> {
                       ],
                     ),
                     if (state is AppUploadProfileImageLoadingStates)
-                      Container(
-                        height: 4,
-                        width: 145,
-                        child: LinearProgressIndicator(
-                          color: pinkColor,
+                      Center(
+                        child: Container(
+                          height: 4,
+                          width: 145,
+                          child: LinearProgressIndicator(
+                            color: pinkColor,
+                          ),
                         ),
                       ),
                     const SizedBox(
@@ -415,6 +421,50 @@ class _EditProfileState extends State<EditProfile> {
         );
       },
     );
+  }
+
+  void chooseImage() {
+    scaffoldkey.currentState?.showBottomSheet((context) => Container(
+          width: double.infinity,
+          height: 120,
+          child: SafeArea(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Camera'),
+                  onTap: () {
+                    imageFromCamera();
+                    Navigator.of(context).pop();
+                  }),
+              ListTile(
+                  leading: const Icon(Icons.image),
+                  title: const Text('Gallery'),
+                  onTap: () {
+                    imageFromGallery();
+                    Navigator.of(context).pop();
+                  }),
+            ]),
+          ),
+        ));
+  }
+
+  void imageFromCamera() {
+    ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 50)
+        .then((value) {
+      print("Success pick Image From Gallery");
+      if (value != null) {
+        setState(() {
+          image = File(value.path);
+          filePath = value.path;
+          print(filePath);
+        });
+      }
+    }).catchError((error) {
+      print("Catch Error");
+      // print(error.toString());
+    });
   }
 
   void imageFromGallery() {

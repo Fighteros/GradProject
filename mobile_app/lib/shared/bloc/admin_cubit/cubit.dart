@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:mobile_app/models/addpatient_model.dart';
+import 'package:mobile_app/models/analysis_model.dart';
 import 'package:mobile_app/models/drugs_model.dart';
 import 'package:mobile_app/models/drug2_model.dart';
 import 'package:mobile_app/shared/bloc/admin_cubit/states.dart';
@@ -275,7 +276,7 @@ class AppAdminCubit extends Cubit<CreateAdminStates> {
     });
   }
 
-//______________________________________Drugs
+//______________________________________Drugs_______________________________________________
   CreateCheckUpDrugs? createdrugs;
   void createDrugs({
     required String name,
@@ -342,6 +343,74 @@ class AppAdminCubit extends Cubit<CreateAdminStates> {
     }).catchError((error) {
       print(error.toString());
       emit(AppUpdateDrugsErrorStates(error.toString()));
+    });
+  }
+
+//______________________________________Analysis_______________________________________________
+  AnalysisModel? createanalysis;
+  void createAnalysis({
+    required String name,
+  }) {
+    emit(AppCreateAnalysisLoadingStates());
+    DioHelper.postData(
+      url: CREATEAnalysis,
+      data: {
+        'name': name,
+      },
+    ).then((value) {
+      createanalysis = AnalysisModel.fromJson(value.data);
+      print(value.data);
+      emit(AppCreateAnalysisSuccessStates());
+    }).catchError((error) {
+      emit(AppCreateAnalysisErrorStates(error.toString()));
+    });
+  }
+
+  AnalysisModel? getanalysis;
+  void getAnalysisData({
+    required String getAnalysisID,
+  }) {
+    emit(AppGetAnalysisLoadingStates());
+    DioHelper.getData(
+      url: CREATEDrugs + getAnalysisID,
+    ).then((value) {
+      getanalysis = AnalysisModel.fromJson(value.data);
+      emit(AppGetAnalysisSuccessStates(getanalysis!));
+    }).catchError((error) {
+      emit(AppGetAnalysisErrorStates(error.toString()));
+    });
+  }
+
+  void deleteAnalysis({
+    required String deleteID,
+  }) {
+    emit(AppDeleteAnalysisLoadingStates());
+    DioHelper.deleteData(
+      url: CREATEAnalysis + deleteID,
+    ).then((value) {
+      emit(AppDeleteAnalysisSuccessStates());
+    }).catchError((error) {
+      emit(AppDeleteAnalysisErrorStates(error.toString()));
+    });
+  }
+
+  AnalysisModel? updateAnalysis;
+  void upDateAnalysis({
+    required String upDateID,
+    required String named,
+  }) {
+    emit(AppUpdateAnalysisLoadingStates());
+    DioHelper.putData(
+      url: CREATEAnalysis + upDateID,
+      data: {
+        'name': named,
+      },
+    ).then((value) {
+      updateAnalysis = AnalysisModel.fromJson(value.data);
+      emit(AppUpdateAnalysisSuccessStates(updateAnalysis!));
+    }).catchError((error) {
+      print(error.toString());
+      emit(AppUpdateAnalysisErrorStates(error.toString()));
     });
   }
 }

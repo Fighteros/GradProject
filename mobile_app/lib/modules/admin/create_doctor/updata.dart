@@ -124,7 +124,13 @@ class _CreateState extends State<UpdateDoctor> {
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.white,
                         ),
-                        child: DropdownButton(
+                        child: DropdownButtonFormField(
+                          validator: (value) {
+                            if (value == null) {
+                              return 'field must not be empty';
+                            }
+                            return null;
+                          },
                           hint: const Text(' Select Doctor'),
                           items: data.map((item) {
                             return DropdownMenuItem(
@@ -146,7 +152,6 @@ class _CreateState extends State<UpdateDoctor> {
                             });
                           },
                           value: doctorValue,
-                          underline: Container(),
                         ),
                       ),
                       const SizedBox(
@@ -161,7 +166,7 @@ class _CreateState extends State<UpdateDoctor> {
                               radius: 13,
                               height: 40,
                               width: 130,
-                              changeText: 'Send',
+                              changeText: 'Get Info',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
                                 if (formKey.currentState!.validate()) {
@@ -423,16 +428,18 @@ class _CreateState extends State<UpdateDoctor> {
                               changeText: 'UpDate',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
-                                cubit.upDateDoctor(
-                                  upDateID: doctorValue.toString(),
-                                  firstName: fstNameController.text,
-                                  age: ageController.text,
-                                  gender: genderController.text,
-                                  lastName: lastNameController.text,
-                                  phone: phoneController.text,
-                                  email: emailController.text,
-                                  jobTitle: jobController.text,
-                                );
+                                if (formKey.currentState!.validate()) {
+                                  cubit.upDateDoctor(
+                                    upDateID: doctorValue.toString(),
+                                    firstName: fstNameController.text,
+                                    age: ageController.text,
+                                    gender: genderController.text,
+                                    lastName: lastNameController.text,
+                                    phone: phoneController.text,
+                                    email: emailController.text,
+                                    jobTitle: jobController.text,
+                                  );
+                                }
                               }),
                           fallback: (context) => Center(
                               child:

@@ -26,6 +26,7 @@ class _CheckUpScreenState extends State<DrugsScreen> {
   late PickedFile _imageFile;
   List data = [];
   List checkUpdata = [];
+
   Future<String> getData() async {
     var res = await http.get(
         Uri.parse('https://grad-project-fy-1.herokuapp.com/api/v1/drugs/'),
@@ -150,36 +151,36 @@ class _CheckUpScreenState extends State<DrugsScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white,
-                          ),
-                          child: DropdownButton(
-                            autofocus: false,
-                            hint: const Text(' Select Drugs'),
-                            items: data.map((item) {
-                              return DropdownMenuItem(
-                                child: Text(' ' +
-                                    item['drug_name'] +
-                                    ' '
-                                        'id: ' +
-                                    item['id'].toString()),
-                                value: item['id'].toString(),
-                              );
-                            }).toList(),
-                            onChanged: (newVal) {
-                              setState(() {
-                                drugsvalueId = newVal as String?;
-                              });
-                            },
-                            value: drugsvalueId,
-                            underline: Container(),
-                          ),
-                        ),
-                      ],
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white,
+                      ),
+                      child: DropdownButtonFormField(
+                        validator: (value) {
+                          if (value == null) {
+                            return 'field must not be empty';
+                          }
+                          return null;
+                        },
+                        hint: const Text(' Select Drugs'),
+                        items: data.map((item) {
+                          return DropdownMenuItem(
+                            child: Text(' ' +
+                                item['drug_name'] +
+                                ' '
+                                    'id: ' +
+                                item['id'].toString()),
+                            value: item['id'].toString(),
+                          );
+                        }).toList(),
+                        onChanged: (newVal) {
+                          setState(() {
+                            drugsvalueId = newVal as String?;
+                          });
+                        },
+                        value: drugsvalueId,
+                      ),
                     ),
                     const SizedBox(
                       height: 10,
@@ -250,7 +251,6 @@ class _CheckUpScreenState extends State<DrugsScreen> {
                         onPressed: () {
                           var idCheckUp =
                               CacheHelper.getData(key: 'idCheckUps');
-
                           FocusScope.of(context).unfocus();
                           if (formKey.currentState!.validate()) {
                             cubit.createCheckUpDrugs(

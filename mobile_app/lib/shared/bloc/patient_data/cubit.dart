@@ -1,11 +1,15 @@
 // ignore_for_file: avoid_print
 
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_app/models/analysis_model.dart';
 import 'package:mobile_app/models/drugs_model.dart';
 import 'package:mobile_app/models/getcheckup_model.dart';
 import 'package:mobile_app/models/getpatient_model.dart';
 import 'package:mobile_app/shared/bloc/end_points.dart';
 import 'package:mobile_app/shared/bloc/patient_data/states.dart';
+import 'package:mobile_app/shared/components/components.dart';
 import 'package:mobile_app/shared/network/remote/dio.dart';
 
 class AppPatientCubit extends Cubit<GetPatientStates> {
@@ -83,6 +87,45 @@ class AppPatientCubit extends Cubit<GetPatientStates> {
       emit(AppDrugsSuccessStates());
     }).catchError((e) {
       emit(AppDrugsErrorStates(e.toString()));
+    });
+  }
+
+//__________________________________________________
+
+  // void createAnalysis({
+  //   required String checkUpId,
+  //   required String analysisId,
+  // }) {
+  //   emit(AppDrugsLoadingStates());
+  //   DioHelper.postData(url: UPLOADAnalysis, data: {
+  //     'checkup_id': checkUpId,
+  //     'analysis_id': analysisId,
+  //   }).then((value) {
+  //     createDrugs = CreateCheckUpDrugs.fromJson(value.data);
+  //     emit(AppDrugsSuccessStates());
+  //   }).catchError((e) {
+  //     emit(AppDrugsErrorStates(e.toString()));
+  //   });
+  //"img": await MultipartFile.fromFile(
+  //     analysisImages!.path,
+  //   )
+  // }
+
+  AnalysisModel? uploadAnalysisImages;
+  void upLoadAnalysis({
+    required String checkUpId,
+    required String analysisId,
+  }) {
+    emit(AppUpoaldAnalysisLoadingStates());
+    DioHelper.uploadAnalysis(
+      analysis: analysisId,
+      checkup: checkUpId,
+    ).then((value) {
+      uploadAnalysisImages = AnalysisModel.fromJson(value.data);
+      print(value.data);
+      emit(AppUpoaldAnalysisSuccessStates());
+    }).catchError((e) {
+      emit(AppUpoaldAnalysisErrorStates());
     });
   }
 }

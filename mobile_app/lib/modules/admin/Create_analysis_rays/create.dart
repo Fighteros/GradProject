@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,45 +6,25 @@ import 'package:mobile_app/shared/bloc/admin_cubit/cubit.dart';
 import 'package:mobile_app/shared/bloc/admin_cubit/states.dart';
 import 'package:mobile_app/shared/components/components.dart';
 import 'package:mobile_app/shared/styles/constant.dart';
-import 'package:http/http.dart' as http;
 
-class DeleteDoctor extends StatefulWidget {
-  const DeleteDoctor({Key? key}) : super(key: key);
+class CreateAnalysis extends StatefulWidget {
+  const CreateAnalysis({Key? key}) : super(key: key);
 
   @override
-  State<DeleteDoctor> createState() => _DeleteAdminState();
+  State<CreateAnalysis> createState() => _CreateState();
 }
 
-class _DeleteAdminState extends State<DeleteDoctor> {
+class _CreateState extends State<CreateAnalysis> {
   var formKey = GlobalKey<FormState>();
-  List data = [];
-  String? doctorValue;
-  Future<String> getData() async {
-    var res = await http.get(
-        Uri.parse('https://grad-project-fy-1.herokuapp.com/api/v1/doctors/'),
-        headers: {
-          "authorization": 'Bearer $token',
-        });
-    var resBody = json.decode(res.body);
-    setState(() {
-      data = resBody;
-    });
-    print(resBody);
-    return "Sucess";
-  }
-
-  void initState() {
-    super.initState();
-    this.getData();
-  }
-
+  var nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppAdminCubit, CreateAdminStates>(
       listener: (context, state) {
-        if (state is AppDeleteDoctorSuccessStates) {
+        var cubit = AppAdminCubit.get(context);
+        if (state is AppCreateAnalysisSuccessStates) {
           Fluttertoast.showToast(
-            msg: "Email is Delete",
+            msg: "Analysis is created",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -54,9 +32,9 @@ class _DeleteAdminState extends State<DeleteDoctor> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-        } else if (state is AppDeleteDoctorErrorStates) {
+        } else if (state is AppCreateAnalysisErrorStates) {
           Fluttertoast.showToast(
-            msg: "there's no Doctor With this id",
+            msg: "Couldn't create Analysis",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -91,65 +69,62 @@ class _DeleteAdminState extends State<DeleteDoctor> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       defulttext(
-                        textName: 'Delete Doctor',
+                        textName: 'Create Analysis',
                         fontWeight: FontWeight.bold,
                         size: 22,
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 70,
+                      ),
+                      Row(
+                        children: [
+                          defulttext(
+                            textName: 'Analysis name',
+                            fontWeight: FontWeight.bold,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                       Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white,
-                        ),
-                        child: DropdownButtonFormField(
-                          validator: (value) {
-                            if (value == null) {
-                              return 'field must not be empty';
-                            }
-                            return null;
-                          },
-                          hint: const Text(' Select Doctor'),
-                          items: data.map((item) {
-                            return DropdownMenuItem(
-                              child: Text(
-                                ' ' +
-                                    item['first_name'] +
-                                    ' ' +
-                                    item['last_name'] +
-                                    '  ' +
-                                    'Id: ' +
-                                    item['id'],
-                              ),
-                              value: item['id'].toString(),
-                            );
-                          }).toList(),
-                          onChanged: (newVal) {
-                            setState(() {
-                              doctorValue = newVal as String;
-                            });
-                          },
-                          value: doctorValue,
-                          isDense: true,
-                        ),
+                        width: double.infinity,
+                        height: 70,
+                        child: textFormField(
+                            keyboardType: TextInputType.name,
+                            controller: nameController,
+                            hint: 'Analysis name',
+                            radius: 20,
+                            hintStyle: const TextStyle(
+                              fontSize: 13,
+                            ),
+                            onChange: (value) {
+                              value = null;
+                            },
+                            validate: (value) {
+                              if (value.isEmpty) {
+                                return 'field must not be empty';
+                              } else {
+                                return null;
+                              }
+                            }),
                       ),
-                      const SizedBox(height: 20),
                       Center(
                         child: ConditionalBuilder(
-                          condition: state is! AppDeleteDoctorLoadingStates,
+                          condition: state is! AppCreateAnalysisLoadingStates,
                           builder: (context) => defultButton(
                               changeColor: btnsColor,
                               fontWeight: FontWeight.bold,
                               radius: 13,
                               height: 40,
                               width: 130,
-                              changeText: 'Delete',
+                              changeText: 'add +',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
                                 if (formKey.currentState!.validate()) {
-                                  cubit.deleteDoctor(
-                                    deleteID: doctorValue.toString(),
+                                  cubit.createAnalysis(
+                                    name: nameController.text,
                                   );
                                 }
                               }),

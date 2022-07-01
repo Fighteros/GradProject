@@ -8,11 +8,4 @@ class DrugsModel {
     id = json['id'];
     drugName = json['drug_name'];
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['drug_name'] = this.drugName;
-    return data;
-  }
 }

@@ -111,8 +111,14 @@ class _CreateState extends State<UpdateDrugs> {
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.white,
                         ),
-                        child: DropdownButton(
-                          hint: const Text(' Select Doctor'),
+                        child: DropdownButtonFormField(
+                          validator: (value) {
+                            if (value == null) {
+                              return 'field must not be empty';
+                            }
+                            return null;
+                          },
+                          hint: const Text(' Select Drugs'),
                           items: data.map((item) {
                             return DropdownMenuItem(
                               child: Text(
@@ -131,7 +137,6 @@ class _CreateState extends State<UpdateDrugs> {
                             });
                           },
                           value: drugsValue,
-                          underline: Container(),
                         ),
                       ),
                       const SizedBox(
@@ -146,7 +151,7 @@ class _CreateState extends State<UpdateDrugs> {
                               radius: 13,
                               height: 40,
                               width: 130,
-                              changeText: 'Send',
+                              changeText: 'Get Info',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
                                 if (formKey.currentState!.validate()) {
@@ -208,10 +213,12 @@ class _CreateState extends State<UpdateDrugs> {
                               changeText: 'UpDate',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
-                                cubit.upDateDrugs(
-                                  upDateID: drugsValue.toString(),
-                                  name: drugNameController.text,
-                                );
+                                if (formKey.currentState!.validate()) {
+                                  cubit.upDateDrugs(
+                                    upDateID: drugsValue.toString(),
+                                    name: drugNameController.text,
+                                  );
+                                }
                               }),
                           fallback: (context) => Center(
                               child:

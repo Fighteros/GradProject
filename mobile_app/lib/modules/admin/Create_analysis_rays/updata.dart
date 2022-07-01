@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,20 +9,21 @@ import 'package:mobile_app/shared/components/components.dart';
 import 'package:mobile_app/shared/styles/constant.dart';
 import 'package:http/http.dart' as http;
 
-class DeleteDoctor extends StatefulWidget {
-  const DeleteDoctor({Key? key}) : super(key: key);
+class UpdateAnalysis extends StatefulWidget {
+  const UpdateAnalysis({Key? key}) : super(key: key);
 
   @override
-  State<DeleteDoctor> createState() => _DeleteAdminState();
+  State<UpdateAnalysis> createState() => _CreateState();
 }
 
-class _DeleteAdminState extends State<DeleteDoctor> {
+class _CreateState extends State<UpdateAnalysis> {
   var formKey = GlobalKey<FormState>();
+  TextEditingController analysisNameController = TextEditingController();
   List data = [];
-  String? doctorValue;
+  String? analysisValue;
   Future<String> getData() async {
     var res = await http.get(
-        Uri.parse('https://grad-project-fy-1.herokuapp.com/api/v1/doctors/'),
+        Uri.parse('https://grad-project-fy-1.herokuapp.com/api/v1/rays/'),
         headers: {
           "authorization": 'Bearer $token',
         });
@@ -44,9 +44,10 @@ class _DeleteAdminState extends State<DeleteDoctor> {
   Widget build(BuildContext context) {
     return BlocConsumer<AppAdminCubit, CreateAdminStates>(
       listener: (context, state) {
-        if (state is AppDeleteDoctorSuccessStates) {
+        var cubit = AppAdminCubit.get(context);
+        if (state is AppUpdateAnalysisSuccessStates) {
           Fluttertoast.showToast(
-            msg: "Email is Delete",
+            msg: "Analysis is Update",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -54,9 +55,9 @@ class _DeleteAdminState extends State<DeleteDoctor> {
             textColor: Colors.white,
             fontSize: 16.0,
           );
-        } else if (state is AppDeleteDoctorErrorStates) {
+        } else if (state is AppUpdateAnalysisErrorStates) {
           Fluttertoast.showToast(
-            msg: "there's no Doctor With this id",
+            msg: "ERROR",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -65,6 +66,7 @@ class _DeleteAdminState extends State<DeleteDoctor> {
             fontSize: 16.0,
           );
         }
+        // analysisNameController.text = "${cubit.getanalysis?.analysis?.name}";
       },
       builder: (context, state) {
         var cubit = AppAdminCubit.get(context);
@@ -91,12 +93,17 @@ class _DeleteAdminState extends State<DeleteDoctor> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       defulttext(
-                        textName: 'Delete Doctor',
+                        textName: 'Update Analysis',
                         fontWeight: FontWeight.bold,
                         size: 22,
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 40,
+                      ),
+                      defulttext(
+                        textName: 'Id Analysis',
+                        fontWeight: FontWeight.bold,
+                        size: 16,
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -110,46 +117,100 @@ class _DeleteAdminState extends State<DeleteDoctor> {
                             }
                             return null;
                           },
-                          hint: const Text(' Select Doctor'),
+                          hint: const Text(' Select Analysis'),
                           items: data.map((item) {
                             return DropdownMenuItem(
                               child: Text(
                                 ' ' +
-                                    item['first_name'] +
-                                    ' ' +
-                                    item['last_name'] +
+                                    item['name'] +
                                     '  ' +
                                     'Id: ' +
-                                    item['id'],
+                                    item['id'].toString(),
                               ),
                               value: item['id'].toString(),
                             );
                           }).toList(),
                           onChanged: (newVal) {
                             setState(() {
-                              doctorValue = newVal as String;
+                              analysisValue = newVal as String?;
                             });
                           },
-                          value: doctorValue,
-                          isDense: true,
+                          value: analysisValue,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(
+                        height: 8,
+                      ),
                       Center(
                         child: ConditionalBuilder(
-                          condition: state is! AppDeleteDoctorLoadingStates,
+                          condition: state is! AppGetAnalysisLoadingStates,
                           builder: (context) => defultButton(
                               changeColor: btnsColor,
                               fontWeight: FontWeight.bold,
                               radius: 13,
                               height: 40,
                               width: 130,
-                              changeText: 'Delete',
+                              changeText: 'Get Info',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
                                 if (formKey.currentState!.validate()) {
-                                  cubit.deleteDoctor(
-                                    deleteID: doctorValue.toString(),
+                                  print(
+                                      "analysis" + analysisNameController.text);
+                                  cubit.getAnalysisData(
+                                    getAnalysisID: analysisValue.toString(),
+                                  );
+                                }
+                              }),
+                          fallback: (context) => Center(
+                              child:
+                                  CircularProgressIndicator(color: pinkColor)),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      defulttext(
+                        textName: 'Analysis',
+                        fontWeight: FontWeight.bold,
+                        size: 16,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      textFormField(
+                        validate: (String? value) {
+                          value != null;
+                        },
+                        onChange: (value) {
+                          value = null;
+                        },
+                        controller: analysisNameController,
+                        hint: 'Analysis',
+                        radius: 20,
+                        hintStyle: const TextStyle(
+                          fontSize: 13,
+                        ),
+                        keyboardType: TextInputType.name,
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Center(
+                        child: ConditionalBuilder(
+                          condition: state is! AppUpdateAnalysisLoadingStates,
+                          builder: (context) => defultButton(
+                              changeColor: btnsColor,
+                              fontWeight: FontWeight.bold,
+                              radius: 13,
+                              height: 40,
+                              width: 130,
+                              changeText: 'UpDate',
+                              onPressed: () {
+                                FocusScope.of(context).unfocus();
+                                if (formKey.currentState!.validate()) {
+                                  cubit.upDateAnalysis(
+                                    upDateID: analysisValue.toString(),
+                                    named: analysisNameController.text,
                                   );
                                 }
                               }),

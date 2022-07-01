@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/modules/admin/Create_analysis_rays/create_analysis_rays.dart';
 import 'package:mobile_app/modules/admin/Create_drugs/create_drugs.dart';
 import 'package:mobile_app/modules/admin/create_admin/create_admin.dart';
 import 'package:mobile_app/modules/admin/create_doctor/create_doctor.dart';
@@ -16,7 +17,7 @@ class AdminScreen extends StatelessWidget {
         preferredSize: const Size.fromHeight(60.0),
         child: AppBar(
           elevation: 0.0,
-          flexibleSpace: Center(),
+          flexibleSpace: const Center(),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(15),
@@ -38,11 +39,11 @@ class AdminScreen extends StatelessWidget {
               onPressed: () {
                 navigateTo(
                   context,
-                  CreateAdminScreen(),
+                  const CreateAdminScreen(),
                 );
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             defultButton(
@@ -50,10 +51,10 @@ class AdminScreen extends StatelessWidget {
               changeColor: btnsColor,
               changeText: 'Doctor',
               onPressed: () {
-                navigateTo(context, CreateDoctorScreen());
+                navigateTo(context, const CreateDoctorScreen());
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             defultButton(
@@ -61,10 +62,10 @@ class AdminScreen extends StatelessWidget {
               changeColor: btnsColor,
               changeText: 'Patient',
               onPressed: () {
-                navigateTo(context, CreatePatientScreen());
+                navigateTo(context, const CreatePatientScreen());
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             defultButton(
@@ -72,7 +73,18 @@ class AdminScreen extends StatelessWidget {
               changeColor: btnsColor,
               changeText: 'Drugs',
               onPressed: () {
-                navigateTo(context, CreateDrugsScreen());
+                navigateTo(context, const CreateDrugsScreen());
+              },
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            defultButton(
+              height: 100,
+              changeColor: btnsColor,
+              changeText: 'Analysis and Rays',
+              onPressed: () {
+                navigateTo(context, const CreateAnalysisScreen());
               },
             ),
           ],

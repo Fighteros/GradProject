@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_app/shared/bloc/admin_cubit/cubit.dart';
 import 'package:mobile_app/shared/bloc/admin_cubit/states.dart';
 import 'package:mobile_app/shared/components/components.dart';
+import 'package:mobile_app/shared/network/local/cache_helper.dart';
 import 'package:mobile_app/shared/styles/constant.dart';
 import 'package:http/http.dart' as http;
 
@@ -46,6 +47,7 @@ class _CreateState extends State<UpdateAdmin> {
   void initState() {
     super.initState();
     this.getData();
+    var cubit = AppAdminCubit.get(context);
   }
 
   @override
@@ -124,7 +126,13 @@ class _CreateState extends State<UpdateAdmin> {
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.white,
                         ),
-                        child: DropdownButton(
+                        child: DropdownButtonFormField(
+                          validator: (value) {
+                            if (value == null && adminValue.toString() == '1') {
+                              return 'field must not be empty';
+                            }
+                            return null;
+                          },
                           hint: const Text(' Select Admin'),
                           items: data.map((item) {
                             return DropdownMenuItem(
@@ -146,7 +154,6 @@ class _CreateState extends State<UpdateAdmin> {
                             });
                           },
                           value: adminValue,
-                          underline: Container(),
                         ),
                       ),
                       const SizedBox(
@@ -161,7 +168,7 @@ class _CreateState extends State<UpdateAdmin> {
                               radius: 13,
                               height: 40,
                               width: 130,
-                              changeText: 'Send',
+                              changeText: 'Get Info',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
                                 if (formKey.currentState!.validate()) {

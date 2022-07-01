@@ -44,3 +44,9 @@ class AppDrugsErrorStates extends GetPatientStates {
 
   AppDrugsErrorStates(this.error);
 }
+
+class AppUpoaldAnalysisLoadingStates extends GetPatientStates {}
+
+class AppUpoaldAnalysisSuccessStates extends GetPatientStates {}
+
+class AppUpoaldAnalysisErrorStates extends GetPatientStates {}

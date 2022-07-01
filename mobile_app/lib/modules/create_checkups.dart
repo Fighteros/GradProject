@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile_app/modules/create_analysis_rays.dart';
 import 'package:mobile_app/modules/create_drugs.dart';
 import 'package:mobile_app/shared/bloc/doctor_cubit/cubit.dart';
 import 'package:mobile_app/shared/bloc/patient_data/cubit.dart';
@@ -145,14 +146,22 @@ class _CheckUpScreenState extends State<CheckUpScreen> {
                         borderRadius: BorderRadius.circular(15),
                         color: Colors.white,
                       ),
-                      child: DropdownButton(
+                      child: DropdownButtonFormField(
+                        validator: (value) {
+                          if (value == null) {
+                            return 'field must not be empty';
+                          }
+                          return null;
+                        },
                         hint: const Text(' Select Patient'),
                         items: data.map((item) {
                           return DropdownMenuItem(
                             child: Text(' ' +
                                 item['first_name'] +
                                 ' ' +
-                                item['last_name']),
+                                item['last_name'] +
+                                ' id: ' +
+                                item['id'].toString()),
                             value: item['id'].toString(),
                           );
                         }).toList(),
@@ -162,7 +171,6 @@ class _CheckUpScreenState extends State<CheckUpScreen> {
                           });
                         },
                         value: patientvalue,
-                        underline: Container(),
                       ),
                     ),
                     const SizedBox(
@@ -225,7 +233,7 @@ class _CheckUpScreenState extends State<CheckUpScreen> {
                     ),
                     defulttext(
                       textName:
-                          'Can\'t add Drugs Without Create Check Up Firstly',
+                          'Can\'t add any things Without Create Check Up Firstly',
                       fontWeight: FontWeight.bold,
                     ),
                     const SizedBox(
@@ -237,6 +245,19 @@ class _CheckUpScreenState extends State<CheckUpScreen> {
                         changeText: 'Add Drugs',
                         onPressed: () {
                           navigateTo(context, const DrugsScreen());
+                        }),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    defultButton(
+                        width: double.infinity,
+                        changeColor: btnsColor,
+                        changeText: 'Add Analysis and Rays',
+                        onPressed: () {
+                          navigateTo(context, const AnalysisScreen());
                         }),
                   ],
                 ),

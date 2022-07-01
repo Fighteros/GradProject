@@ -96,6 +96,26 @@ class DioHelper {
     return res;
   }
 
+  static Future<Response> uploadAnalysis({
+    required String checkup,
+    required String analysis,
+  }) async {
+    dio?.options.headers = {
+      "authorization": '$accessType$token',
+    };
+    FormData formData = FormData.fromMap({
+      'checkup_id': checkup,
+      'analysis_id': analysis,
+      "img": await MultipartFile.fromFile(
+        analysisImages!.path,
+      )
+    });
+    return dio!.post(
+      UPLOADAnalysis,
+      data: formData,
+    );
+  }
+
   static Future<Response> uploadImage() async {
     dio?.options.headers = {
       "authorization": '$accessType$token',

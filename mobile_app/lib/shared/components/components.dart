@@ -6,11 +6,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobile_app/models/getcheckup_model.dart';
 import 'package:mobile_app/models/getdoctor_model.dart';
-import 'package:mobile_app/models/getpatient_model.dart';
 import 'package:mobile_app/modules/loginscreen.dart';
+import 'package:mobile_app/modules/patient_result.dart';
 import 'package:mobile_app/modules/profile_screen.dart';
 import 'package:mobile_app/shared/bloc/doctor_cubit/cubit.dart';
-import 'package:mobile_app/shared/bloc/login_cubit/cubit.dart';
 import 'package:mobile_app/shared/bloc/profile/cubit.dart';
 import 'package:mobile_app/shared/network/local/cache_helper.dart';
 import 'package:mobile_app/shared/styles/constant.dart';
@@ -176,58 +175,63 @@ void navigateTo(context, widget) => Navigator.push(
       ),
     );
 
-Widget buildPatientItems(getCheck) => SingleChildScrollView(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadiusDirectional.circular(10),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Image(
-                image: NetworkImage(
-                  '${GetCheckUpModel.fromJson(getCheck).patient?.image?.url}',
-                ),
-                height: 100,
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadiusDirectional.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    defulttext(
-                      textName:
-                          '${GetCheckUpModel.fromJson(getCheck).patient?.firstName} ${GetCheckUpModel.fromJson(getCheck).patient?.lastName}',
-                      size: 21,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    GetCheckUpModel.fromJson(getCheck).patient?.id == ''
-                        ? defulttext(textName: '')
-                        : defulttext(
-                            textName:
-                                'Id: ${GetCheckUpModel.fromJson(getCheck).patient?.id}',
-                            size: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    defulttext(
-                      textName:
-                          'Description:\n${GetCheckUpModel.fromJson(getCheck).description}',
-                      size: 17,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.blue[600],
-                    ),
-                  ],
+Widget buildPatientItems(getCheck, context) => SingleChildScrollView(
+      child: GestureDetector(
+        onTap: () {
+          navigateTo(context, PatientResult());
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadiusDirectional.circular(10),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Image(
+                  image: NetworkImage(
+                    '${GetCheckUpModel.fromJson(getCheck).patient?.image?.url}',
+                  ),
+                  height: 100,
                 ),
               ),
-            )
-          ],
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadiusDirectional.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      defulttext(
+                        textName:
+                            '${GetCheckUpModel.fromJson(getCheck).patient?.firstName} ${GetCheckUpModel.fromJson(getCheck).patient?.lastName}',
+                        size: 21,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      GetCheckUpModel.fromJson(getCheck).patient?.id == ''
+                          ? defulttext(textName: '')
+                          : defulttext(
+                              textName:
+                                  'Id: ${GetCheckUpModel.fromJson(getCheck).patient?.id}',
+                              size: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      defulttext(
+                        textName:
+                            'Description:\n${GetCheckUpModel.fromJson(getCheck).description}',
+                        size: 17,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.blue[600],
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -236,7 +240,8 @@ Widget patientBuilder(getCheck, context) => ConditionalBuilder(
       builder: (context) => ListView.separated(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemBuilder: (context, index) => buildPatientItems(getCheck[index]),
+        itemBuilder: (context, index) =>
+            buildPatientItems(getCheck[index], context),
         separatorBuilder: (context, index) => const SizedBox(
           height: 10,
         ),
@@ -255,20 +260,22 @@ Widget buildPopMenuButton(BuildContext context) {
     ),
     onSelected: (value) {
       if (value == 0) {
-        getDoctor = null;
-        userlevel = 0;
-        idStart = null;
-        token = null;
+        getDoctor == null;
+        // userlevel = 0;
+        idStart == null;
+        // token = null;
         CacheHelper.removeData(key: 'idCheckUps');
         CacheHelper.removeData(key: 'userLevelId').then((value) {
-          // userlevel == 0;
+          if (value) {
+            userlevel == 0;
+          }
         });
         CacheHelper.removeData(key: 'id').then((value) {
           // idStart = null;
         });
         CacheHelper.removeData(key: 'token').then((value) {
           if (value) {
-            // token = null;
+            token == null;
             navigatePushAndRemove(context, const LoginScreen());
             Fluttertoast.showToast(
               msg: 'Good By',
@@ -307,7 +314,7 @@ Widget buildPopMenuButton(BuildContext context) {
 
 Widget ProfileIcon(BuildContext context) {
   var cubit = AppDoctorCubit.get(context);
-  var profFromLogin = AppCubit.get(context);
+  // var profFromLogin = AppCubit.get(context);
   var prof = AppDoctorProfileCubit.get(context);
   return Padding(
     padding: EdgeInsets.only(right: 13, top: 7),
@@ -419,6 +426,8 @@ GetDoctorModel? getDoctor;
 // List<GetCheckUpModel>? getCheckUp;
 String? firstnameOfDoctor;
 String? lastnameOfDoctor;
-int? userlevel;
+int? userlevel = 0;
 String? idStart;
 File? image;
+File? analysisImages;
+int? statuscode = 0;

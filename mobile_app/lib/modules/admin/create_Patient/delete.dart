@@ -103,7 +103,13 @@ class _DeleteAdminState extends State<DeletePatient> {
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.white,
                         ),
-                        child: DropdownButton(
+                        child: DropdownButtonFormField(
+                          validator: (value) {
+                            if (value == null) {
+                              return 'field must not be empty';
+                            }
+                            return null;
+                          },
                           hint: const Text(' Select Patient'),
                           items: data.map((item) {
                             return DropdownMenuItem(
@@ -123,7 +129,6 @@ class _DeleteAdminState extends State<DeletePatient> {
                             });
                           },
                           value: patientValue,
-                          underline: Container(),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -139,9 +144,11 @@ class _DeleteAdminState extends State<DeletePatient> {
                               changeText: 'Delete',
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
-                                cubit.deletePatient(
-                                  deleteID: patientValue.toString(),
-                                );
+                                if (formKey.currentState!.validate()) {
+                                  cubit.deletePatient(
+                                    deleteID: patientValue.toString(),
+                                  );
+                                }
                               }),
                           fallback: (context) => Center(
                               child:

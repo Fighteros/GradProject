@@ -30,6 +30,17 @@ void main() async {
   token = CacheHelper.getData(key: 'token');
   var userLevelId = CacheHelper.getData(key: 'userLevelId');
   idStart = CacheHelper.getData(key: 'id');
+  statuscode = CacheHelper.getData(key: 'StatusCode');
+  print("statuscode: $statuscode");
+
+  // if (homeScreen != null) {
+  //   if (token != null)
+  //     widget = DoctorScreen();
+  //   else
+  //     widget = LoginScreen();
+  // } else {
+  //   widget = HomeScreen();
+  // }
   if (homeScreen != null) {
     if (userLevelId.toString() == '3') {
       widget = const HomePatientScreen();
