@@ -99,7 +99,7 @@ def get_checkup_drugs(db: Session = Depends(get_db),
 @router.get('/checkups/drugs/{id}', response_model=CheckupDrugsResponse)
 def get_checkup_drug_by_id(id: int, db: Session = Depends(get_db),
                            current_user=Depends(get_current_user)):
-    checkup_drug = db.query(models.CheckupDrugs).filter(models.CheckupDrugs.checkup.id == id).first()
+    checkup_drug = db.query(models.CheckupDrugs).filter(models.CheckupDrugs.checkup_id == id).first()
 
     if checkup_drug is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"there is no checkup_drug with id {id}")
@@ -152,7 +152,7 @@ def get_check_diagnoses(db: Session = Depends(get_db), current_user=Depends(get_
 
 @router.get('/checkups/diagnoses/{id}', response_model=CheckupDiagnoseResponse)
 def get_check_diagnoses(id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
-    diagnose = db.query(models.CheckupDiagnoses).filter(models.CheckupDiagnoses.id == id).first()
+    diagnose = db.query(models.CheckupDiagnoses).filter(models.CheckupDiagnoses.checkup_id == id).first()
 
     if not diagnose:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
