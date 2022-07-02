@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var userNameController = TextEditingController();
   var passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -29,15 +30,10 @@ class _LoginScreenState extends State<LoginScreen> {
         listener: (context, state) {
           AppCubit cubit = AppCubit.get(context);
           userlevel = cubit.login?.user!.userLevelId!.toInt();
-
-          // print(token);
+          print(state);
           if (state is AppLoginSuccessStates) {
-            print(userlevel);
-            print(token);
-            print(state.loginModel.user?.email);
             CacheHelper.saveData(key: 'id', value: cubit.login?.user!.id)
                 .then((value) {});
-
             CacheHelper.saveData(
                     key: 'userLevelId',
                     value: state.loginModel.user?.userLevelId)
@@ -56,9 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: 'token', value: state.loginModel.accessToken)
                 .then((value) {
               token = cubit.login?.accessToken;
-              // print(state.loginModel.token?.accessToken);
               Fluttertoast.showToast(
-                msg: "You are welcome 😊😊",
+                msg: "You are welcome ",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1,
@@ -69,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
             });
           } else if (state is AppLoginErrorStates) {
             Fluttertoast.showToast(
-              msg: "Email is not validate 😡😡😡",
+              msg: "Email is not valid ",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 1,
@@ -152,13 +147,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               }),
                         ),
-                        Container(
-                          alignment: Alignment.bottomRight,
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Text('forgot password?'),
-                          ),
-                        ),
+                        // Container(
+                        //   alignment: Alignment.bottomRight,
+                        //   child: TextButton(
+                        //     onPressed: () {},
+                        //     child: const Text('forgot password?'),
+                        //   ),
+                        // ),
                         const SizedBox(
                           height: 30,
                         ),

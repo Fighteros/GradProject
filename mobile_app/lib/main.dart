@@ -22,7 +22,7 @@ void main() async {
   await CacheHelper.init();
   Widget? widget;
 
-  bool homeScreen = CacheHelper.getData(key: 'home');
+  var homeScreen = CacheHelper.getData(key: 'home');
   token = CacheHelper.getData(key: 'token');
   var userLevelId = CacheHelper.getData(key: 'userLevelId');
   id = CacheHelper.getData(key: 'id');
@@ -39,6 +39,7 @@ void main() async {
     widget = const HomeScreen();
   }
 
+
   Bloc.observer = MyBlocObserver();
 
   runApp(MyApp(
@@ -48,9 +49,11 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   Widget startwidget;
+
   MyApp({
     required this.startwidget,
   });
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

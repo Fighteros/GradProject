@@ -28,9 +28,10 @@ class AppCubit extends Cubit<DoctorLoginStates> {
         'password': password,
       },
     ).then((value) {
+      print('trying to request from backend $value');
       login = LoginModel.fromJson(value.data);
       print(login?.accessToken);
-      // statuscode = value.statusCode;
+      statuscode = value.statusCode;
       // print(value.headers['Postman-Token']);
       // print('token is = ${login!.token}');
       emit(AppLoginSuccessStates(login!));

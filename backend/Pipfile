@@ -4,7 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
+fastapi = {extras = ["all"], version = "*"}
+psycopg2 = "*"
+sqlalchemy = "*"
+passlib = {extras = ["bcrypt"], version = "*"}
+python-jose = {extras = ["cryptography"], version = "*"}
+azure-storage-blob = "*"
+python-multipart = "*"
+fastapi-users = {extras = ["sqlalchemy2"], version = "*"}
+alembic = "*"
+pydantic-sqlalchemy = "*"
 
 [dev-packages]
 

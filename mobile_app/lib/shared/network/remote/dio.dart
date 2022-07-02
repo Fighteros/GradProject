@@ -5,6 +5,7 @@ import 'package:mobile_app/shared/components/components.dart';
 class DioHelper {
   static late Dio dio;
   static const String accessType = 'Bearer ';
+
   static init() {
     dio = Dio(
       BaseOptions(
@@ -43,6 +44,7 @@ class DioHelper {
   }
 
   static var res;
+
   static Future<Response> postbody({
     required Map<String, dynamic> body,
     required String url,
@@ -58,6 +60,8 @@ class DioHelper {
         data: formData,
         queryParameters: query,
       );
+
+      print('this is postbody res $res');
       return res?.data;
     } catch (e) {
       print(e.toString());
@@ -81,19 +85,19 @@ class DioHelper {
   }
 }
 
-  // static Future<List<GetPatientModel>> fetchUsers() async {
-  //   try {
-  //     Response response = await Dio().get('');
-  //     if (response.statusCode == 200) {
-  //       var getUsersData = response.data as List;
-  //       var listUsers =
-  //           getUsersData.map((i) => GetPatientModel.fromJson(i)).toList();
-  //       return listUsers;
-  //     } else {
-  //       throw Exception('Failed to load users');
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+// static Future<List<GetPatientModel>> fetchUsers() async {
+//   try {
+//     Response response = await Dio().get('');
+//     if (response.statusCode == 200) {
+//       var getUsersData = response.data as List;
+//       var listUsers =
+//           getUsersData.map((i) => GetPatientModel.fromJson(i)).toList();
+//       return listUsers;
+//     } else {
+//       throw Exception('Failed to load users');
+//     }
+//   } catch (e) {
+//     print(e);
+//   }
+// }
 // }
